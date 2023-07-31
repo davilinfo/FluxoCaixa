@@ -1,7 +1,10 @@
-﻿namespace Application.Interfaces
+﻿using Application.Models.Request;
+using Application.Models.ViewModel;
+
+namespace Application.Interfaces
 {
   public interface IApplicationServiceFluxoCaixa
   {
-    Task UpdateBalanceFromRecord(Guid recordId);
+    Task<RecordViewModel> AddAsync(RecordRequest recordRequest);
   }
 }

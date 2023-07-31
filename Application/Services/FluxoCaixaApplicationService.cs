@@ -1,49 +1,93 @@
 ﻿using Application.Enum;
 using Application.Exception;
 using Application.Interfaces;
+using Application.Models.Request;
+using Application.Models.ViewModel;
+using AutoMapper;
 using Domain.Contract;
 using Domain.EF;
 using System.Diagnostics.CodeAnalysis;
-using System.Transactions;
 
 namespace Application.Services
 {
   [ExcludeFromCodeCoverage]
   public class FluxoCaixaApplicationService : IApplicationServiceFluxoCaixa
-  {    
-    private readonly IRepositoryRecord _repositoryRecord;
+  {
+    private readonly IMapper _mapper;
+    private readonly IRepositoryFluxoCaixa _repositoryFluxoCaixa;
     private readonly IRepositoryBalance _repositoryBalance;
-    const string _contaSemSaldoSuficiente = "Conta sem saldo suficiente";
+    private readonly IRepositoryAccount _repositoryAccount;
+    private readonly IRepositoryExtract _repositoryExtract;
+    const string _contaInvalidaMsg = "Conta inválida";
+    const string _contaSaldoInsuficienteMsg = "Saldo insuficiente";    
 
-    public FluxoCaixaApplicationService(IRepositoryRecord repositoryRecord, IRepositoryBalance repositoryBalance)
+    public FluxoCaixaApplicationService(IMapper mapper, 
+      IRepositoryAccount repositoryAccount, 
+      IRepositoryFluxoCaixa repositoryFluxoCaixa, 
+      IRepositoryBalance repositoryBalance,
+      IRepositoryExtract repositoryExtract)
     {
-      _repositoryBalance = repositoryBalance;      
-      _repositoryRecord = repositoryRecord;
+      _mapper = mapper;
+      _repositoryBalance = repositoryBalance;
+      _repositoryFluxoCaixa = repositoryFluxoCaixa;
+      _repositoryAccount = repositoryAccount;
+      _repositoryExtract = repositoryExtract;
     }
-    public async Task UpdateBalanceFromRecord(Guid recordId)
+    public async Task<RecordViewModel> AddAsync(RecordRequest recordRequest)
     {
-      var record = await _repositoryRecord.GetById(recordId);
+      var viewModel = _mapper.Map<RecordViewModel>(recordRequest);
+      viewModel.History = recordRequest.Description;
+      viewModel.IdAccountNavigation = new AccountViewModel { Id = (Guid.Parse(recordRequest.AccountId)) };
 
-      if (record != null) {
+      var result = await Add(viewModel);
+
+      return result;
+    }
+    private async Task<RecordViewModel> Add(RecordViewModel model)
+    {
+      model.DateTime = DateTime.UtcNow;
+      var entity = _mapper.Map<Record>(model);
+
+      await HandleValidation(entity);
+
+      await AddRecordUpdateBalanceFromRecord(entity);
+
+      model = _mapper.Map<RecordViewModel>(entity);
+
+      return model;
+    }
+
+    private async Task AddRecordUpdateBalanceFromRecord(Record record)
+    {
+      if (record != null)
+      {
         var balance = _repositoryBalance.All().FirstOrDefault(b => b.IdAccountNavigation.Id == record.IdAccountNavigation.Id);
-
-        using (var scope = new TransactionScope(TransactionScopeOption.Required))
+        if (balance == null)
         {
-          if (balance == null)
+          if (record.Type.ToString().ToLower() == ((char)RecordType.Debit).ToString().ToLower())
           {
-            var newBalance = new Balance()
-            {
-              Created = DateTime.UtcNow,
-              IdAccountNavigation = record.IdAccountNavigation,
-              Value = 0,
-              Updated = DateTime.UtcNow
-            };
-
-            var guid = await _repositoryBalance.Add(newBalance);
-            balance = await _repositoryBalance.GetById(guid);
+            throw new BusinessException(_contaSaldoInsuficienteMsg);
           }
+          var newBalance = new Balance()
+          {
+            Created = DateTime.UtcNow,
+            IdAccountNavigation = record.IdAccountNavigation,
+            Value = record.Value,
+            Updated = DateTime.UtcNow
+          };
 
-          if (record.Type == (char)RecordType.Debit)
+          var extract = new Extract() { 
+            Value = newBalance.Value, 
+            Created = DateTime.UtcNow, 
+            IdRecordNavigation = record, 
+            IdAccountNavigation = record.IdAccountNavigation 
+          };
+
+          var guid = await _repositoryFluxoCaixa.AddBalance(newBalance, record, extract);
+        }
+        else
+        {
+          if (record.Type.ToString().ToLower() == ((char)RecordType.Debit).ToString().ToLower())
           {
             if (balance.Value >= record.Value)
             {
@@ -51,20 +95,50 @@ namespace Application.Services
             }
             else
             {
-              throw new BusinessException(_contaSemSaldoSuficiente);
+              throw new BusinessException(_contaSaldoInsuficienteMsg);
             }
           }
 
-          if (record.Type == (char)RecordType.Credit)
+          if (record.Type.ToString().ToLower() == ((char)RecordType.Credit).ToString().ToLower())
           {
             balance.Value += record.Value;
           }
 
-          if (await _repositoryBalance.Update(balance) >= 0)
+          var extract = new Extract()
           {
-            scope.Complete();
-          }
+            Value = balance.Value,
+            Created = DateTime.UtcNow,
+            IdRecordNavigation = record,
+            IdAccountNavigation = record.IdAccountNavigation
+          };
+
+          await _repositoryFluxoCaixa.UpdateBalance(balance, record, extract);
         }
+      }
+    }
+
+    private async Task HandleValidation(Record record)
+    {
+      if (record.IdAccountNavigation == null)
+      {
+        throw new BusinessException(_contaInvalidaMsg);
+      }
+      var account = await _repositoryAccount.GetById(record.IdAccountNavigation.Id);
+      if (account == null)
+      {
+        throw new BusinessException(_contaInvalidaMsg);
+      }
+
+      var balance = _repositoryBalance.All().FirstOrDefault(b => b.IdAccountNavigation.Id == record.IdAccountNavigation.Id);
+
+      if (balance == null && record.Type.ToString().ToLower() == ((char)RecordType.Debit).ToString().ToLower())
+      {
+        throw new BusinessException(_contaSaldoInsuficienteMsg);
+      }
+      if (balance != null && record.Type.ToString().ToLower() == ((char)RecordType.Debit).ToString().ToLower())
+      {
+        if (balance?.Value < record.Value)
+          throw new BusinessException(_contaSaldoInsuficienteMsg);
       }
     }
   }
