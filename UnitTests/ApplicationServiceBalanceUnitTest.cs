@@ -29,6 +29,7 @@ namespace UnitTests
       mapperSetupAcc.Verifiable();
 
       var repoBalance = mockRepositoryBalance.Setup(b => b.Add(balance)).Returns(Task.FromResult(balance.Id));
+      repoBalance.Verifiable();
 
       var mapBalanceAdd = mockMapper.Setup(m => m.Map<BalanceViewModel>(balance)).Returns(newBalance);
 
@@ -36,8 +37,10 @@ namespace UnitTests
       var result = await service.Add(balanceViewModel);
 
       mockMapper.VerifyAll();
+      mockRepositoryBalance.VerifyAll();
 
       Assert.IsNotNull(result.Id);
+      Assert.AreEqual(result.Id, newBalance.Id);
     }
   }
 }
