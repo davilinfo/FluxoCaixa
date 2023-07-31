@@ -5,9 +5,11 @@ using Application.Models.ViewModel;
 using AutoMapper;
 using Domain.Contract;
 using Domain.EF;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Application.Services
 {
+  [ExcludeFromCodeCoverage]
   public class AccountApplicationService : IApplicationServiceAccount
   {
     private readonly IMapper _mapper;

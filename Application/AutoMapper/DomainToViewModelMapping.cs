@@ -1,9 +1,11 @@
 ﻿using Application.Models.ViewModel;
 using AutoMapper;
 using Domain.EF;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Application.AutoMapper
 {
+  [ExcludeFromCodeCoverage]
   public class DomainToViewModelMapping : Profile
   {
     public DomainToViewModelMapping() { 

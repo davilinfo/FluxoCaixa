@@ -1,15 +1,12 @@
 using Application.Interfaces;
 using Application.Models.Request;
-using Application.Models.ViewModel;
-using Azure.Core;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Identity.Web.Resource;
-using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 
 namespace CarrefourFluxoCaixa.Controllers
 {
+  [ExcludeFromCodeCoverage]
   //[Authorize]
   [ApiController]
   [Route("[controller]")]
@@ -193,7 +190,7 @@ namespace CarrefourFluxoCaixa.Controllers
         if (ModelState.IsValid)
         {
           var model = await _applicationServiceRecord.AddAsync(request);
-          return Created($"fluxocaixa/getsaldo/{model?.IdAccountNavigation?.Email}", model);
+          return Created($"fluxocaixa/getsaldo/{model?.IdAccountNavigation?.Id}", model);
         }
         foreach (var item in ModelState.Values)
         {

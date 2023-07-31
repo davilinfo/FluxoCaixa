@@ -3,10 +3,12 @@ using Application.Exception;
 using Application.Interfaces;
 using Domain.Contract;
 using Domain.EF;
+using System.Diagnostics.CodeAnalysis;
 using System.Transactions;
 
 namespace Application.Services
 {
+  [ExcludeFromCodeCoverage]
   public class FluxoCaixaApplicationService : IApplicationServiceFluxoCaixa
   {    
     private readonly IRepositoryRecord _repositoryRecord;

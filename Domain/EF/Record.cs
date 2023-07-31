@@ -2,9 +2,11 @@
 using Domain.Enum;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Domain.EF
 {
+  [ExcludeFromCodeCoverage]
   [Table("Record")]
   public class Record : GuidEntity
   {    

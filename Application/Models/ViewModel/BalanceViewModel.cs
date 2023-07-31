@@ -1,7 +1,10 @@
-﻿namespace Application.Models.ViewModel
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Application.Models.ViewModel
 {
   public class BalanceViewModel
   {
+    [ExcludeFromCodeCoverage]
     public Guid Id { get; set; }
     public double Value { get; set; }
     public DateTime Updated { get; set; }

@@ -2,9 +2,11 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Domain.EF
 {
+  [ExcludeFromCodeCoverage]
   [Table("Account")]
   public class Account : GuidEntity
   {
