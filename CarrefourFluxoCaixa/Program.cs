@@ -30,6 +30,7 @@ builder.Services.AddScoped<IRepositoryAccount, RepositoryAccount>();
 builder.Services.AddScoped<IRepositoryBalance, RepositoryBalance>();
 builder.Services.AddScoped<IRepositoryExtract, RepositoryExtract>();
 builder.Services.AddScoped<IRepositoryRecord, RepositoryRecord>();
+builder.Services.AddScoped<IRepositoryFluxoCaixa, RepositoryFluxoCaixa>();
 
 builder.Services.AddScoped<IApplicationServiceAccount, AccountApplicationService>();
 builder.Services.AddScoped<IApplicationServiceBalance, BalanceApplicationService>();
