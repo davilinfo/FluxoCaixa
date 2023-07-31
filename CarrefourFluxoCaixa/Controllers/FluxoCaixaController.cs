@@ -17,19 +17,22 @@ namespace CarrefourFluxoCaixa.Controllers
     private readonly ILogger<FluxoCaixaController> _logger;
     private readonly IApplicationServiceAccount _applicationServiceAccount;
     private readonly IApplicationServiceBalance _applicationServiceBalance;
-    private readonly IApplicationServiceRecord _applicationServiceRecord;
+    private readonly IApplicationServiceFluxoCaixa _applicationServiceFluxoCaixa;
+    private readonly IConsolidadoQueueApplicationService _consolidadoQueueApplicationService;
 
     public FluxoCaixaController(
       ILogger<FluxoCaixaController> logger, 
       IApplicationServiceAccount applicationServiceAccount,
       IApplicationServiceBalance applicationServiceBalance,
-      IApplicationServiceRecord applicationServiceRecord
+      IApplicationServiceFluxoCaixa applicationServiceFluxoCaixa,
+      IConsolidadoQueueApplicationService consolidadoQueueApplicationService
       )
     {
       _logger = logger;
       _applicationServiceAccount = applicationServiceAccount;
       _applicationServiceBalance = applicationServiceBalance;
-      _applicationServiceRecord = applicationServiceRecord;
+      _applicationServiceFluxoCaixa = applicationServiceFluxoCaixa;
+      _consolidadoQueueApplicationService = consolidadoQueueApplicationService;
     }
 
     /// <summary>
@@ -149,14 +152,21 @@ namespace CarrefourFluxoCaixa.Controllers
     /// <param name="request">Account number, email e dia</param>
     /// <returns></returns>
     [HttpGet("GetExtrato", Name = "GetExtract")]
-    public async Task<IActionResult> GetExtract(GetExtractRequest request)
+    public async Task<IActionResult> GetExtract([FromQuery]GetExtractRequest request)
     {
       _logger.LogInformation($"Get extract request: {JsonSerializer.Serialize(request)}");
       try
       {
+        DateTime date;
+        if (!DateTime.TryParse($"{int.Parse(request.DiaMesAno.Substring(4))}/{int.Parse(request.DiaMesAno.Substring(2, 2))}/{int.Parse(request.DiaMesAno.Substring(0, 2))}", out date))
+        {
+          ModelState.AddModelError("diamesano", "Data inválida");
+        }
+
         if (ModelState.IsValid)
         {
-          return Ok("");
+          var result = await _consolidadoQueueApplicationService.GenerateConsolidado(request);          
+          return Ok(result);
         }
         foreach (var item in ModelState.Values)
         {
@@ -189,7 +199,7 @@ namespace CarrefourFluxoCaixa.Controllers
       {
         if (ModelState.IsValid)
         {
-          var model = await _applicationServiceRecord.AddAsync(request);
+          var model = await _applicationServiceFluxoCaixa.AddAsync(request);
           return Created($"fluxocaixa/getsaldo/{model?.IdAccountNavigation?.Id}", model);
         }
         foreach (var item in ModelState.Values)

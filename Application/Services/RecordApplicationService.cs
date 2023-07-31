@@ -7,7 +7,6 @@ using AutoMapper;
 using Domain.Contract;
 using Domain.EF;
 using System.Diagnostics.CodeAnalysis;
-using System.Transactions;
 
 namespace Application.Services
 {

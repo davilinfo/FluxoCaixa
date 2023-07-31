@@ -25,7 +25,7 @@ namespace Persistence.Repository
 
     public IQueryable<Extract> All()
     {
-      return _context.Extracts.AsNoTracking();
+      return _context.Extracts.Include(e=> e.IdAccountNavigation).Include(r=>r.IdRecordNavigation).AsNoTracking();
     }
 
     public Task<int> Delete(Guid id)
@@ -35,7 +35,7 @@ namespace Persistence.Repository
 
     public async Task<Extract> GetById(Guid id)
     {
-      var result = await _context.Extracts.FirstOrDefaultAsync(t => t.Id == id);
+      var result = await _context.Extracts.Include(e => e.IdAccountNavigation).Include(r => r.IdRecordNavigation).FirstOrDefaultAsync(t => t.Id == id);
       return result;
     }
 
