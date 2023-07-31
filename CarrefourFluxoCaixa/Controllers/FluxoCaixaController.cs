@@ -1,10 +1,12 @@
 using Application.Interfaces;
 using Application.Models.Request;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 
 namespace CarrefourFluxoCaixa.Controllers
 {
+  [ExcludeFromCodeCoverage]
   //[Authorize]
   [ApiController]
   [Route("[controller]")]

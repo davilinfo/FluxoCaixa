@@ -1,5 +1,8 @@
-﻿namespace Application.Exception
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Application.Exception
 {
+  [ExcludeFromCodeCoverage]
   public class BusinessException : System.Exception
   {    
     public BusinessException()

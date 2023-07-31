@@ -1,5 +1,8 @@
-﻿namespace Application.Models.ViewModel
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Application.Models.ViewModel
 {
+  [ExcludeFromCodeCoverage]
   public class ExtractViewModel
   {
     public Guid Id { get; set; }

@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Application.Models.Request
 {
+  [ExcludeFromCodeCoverage]
   public class AccountRequest
   {    
     [Required(ErrorMessage = "O nome do dono da conta de fluxo é obrigatório")]

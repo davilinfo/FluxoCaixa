@@ -1,8 +1,10 @@
 ﻿using Application.Enum;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Application.Models.ViewModel
 {
+  [ExcludeFromCodeCoverage]
   public class RecordViewModel
   {
     public Guid Id { get; set; }

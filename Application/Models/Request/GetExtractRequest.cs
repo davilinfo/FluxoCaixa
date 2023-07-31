@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Application.Models.Request
 {
+  [ExcludeFromCodeCoverage]
   public class GetExtractRequest
   {
     [Required(ErrorMessage = "Você deve informar o id conta")]
