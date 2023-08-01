@@ -24,9 +24,13 @@ namespace Application.Services
     {
       var consolidadoResponse = await Generate(request);
 
-      SendToFluxoQueue(consolidadoResponse);
+      if (consolidadoResponse != null)
+      {
+        SendToFluxoQueue(consolidadoResponse);
+        return consolidadoResponse;
+      }
 
-      return consolidadoResponse;
+      return null;
     } 
     
     private async Task<ConsolidadoResponse> Generate(GetExtractRequest request)
@@ -72,7 +76,7 @@ namespace Application.Services
         }
         else
         {
-          throw new BusinessException("Fluxo sem movimentação");
+          return null;
         }
       }
       return consolidadoResponse;
