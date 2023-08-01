@@ -6,10 +6,12 @@ using AutoMapper;
 using Domain.Contract;
 using Microsoft.Extensions.Configuration;
 using RabbitMQ.Client;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
 namespace Application.Services
 {
+  [ExcludeFromCodeCoverage]
   public class ConsolidadoQueueApplicationService : IConsolidadoQueueApplicationService
   {
     private IRepositoryExtract _repositoryExtract;
@@ -90,7 +92,7 @@ namespace Application.Services
     private void SendToFluxoQueue(ConsolidadoResponse consolidadoResponse)
     {      
       var amqpPort = _config.GetSection("AMQP:Port").Value != null ? int.Parse(_config.GetSection("AMQP:Port").Value) : 5672;
-      var factory = new ConnectionFactory() { HostName = "localhost", UserName = "guest", Password = "guest", Port = amqpPort };
+      var factory = new ConnectionFactory() { HostName = _config.GetSection("AMQP:Hostname").Value, UserName = "guest", Password = "guest", Port = amqpPort };
 
       using (var connection = factory.CreateConnection())
       {
