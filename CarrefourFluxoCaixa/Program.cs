@@ -3,6 +3,7 @@ using Application.Services;
 using Domain.Contract;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Identity.Web;
+using Microsoft.OpenApi.Models;
 using Persistence.Context;
 using Persistence.Repository;
 
@@ -17,6 +18,18 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(gen =>
 {
+  gen.SwaggerDoc("v1", new OpenApiInfo
+  {
+    Version = "v1",
+    Title = "Mansait - Carrefour API",
+    Description = "Um Web API em ASP.NET Core Web API para gerenciamento de fluxo de caixa. É necessário você estar executando o RabbitMQ na porta padrão para retornar extrato de conta!",    
+    Contact = new OpenApiContact
+    {
+      Name = "Davi Lima Alves",
+      Url = new Uri("https://linkedin.com/in/davilalves")
+    }    
+  });
+
   var xmlFileName = "CarrefourFluxoCaixa.xml";
   gen.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFileName));
 });
