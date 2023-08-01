@@ -6,6 +6,7 @@ using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
 using Persistence.Context;
 using Persistence.Repository;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,7 +31,7 @@ builder.Services.AddSwaggerGen(gen =>
     }    
   });
 
-  var xmlFileName = "CarrefourFluxoCaixa.xml";
+  var xmlFileName = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
   gen.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFileName));
 });
 builder.Services.AddDbContext<FluxoCaixaContext>();
