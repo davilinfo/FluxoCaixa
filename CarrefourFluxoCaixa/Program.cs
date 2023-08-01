@@ -17,6 +17,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(gen =>
 {
+  var xmlFileName = "CarrefourFluxoCaixa.xml";
+  gen.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFileName));
 });
 builder.Services.AddDbContext<FluxoCaixaContext>();
 
@@ -33,6 +35,7 @@ builder.Services.AddScoped<IApplicationServiceFluxoCaixa, FluxoCaixaApplicationS
 builder.Services.AddScoped<IConsolidadoQueueApplicationService, ConsolidadoQueueApplicationService>();
 
 builder.Services.AddAutoMapper(System.Reflection.Assembly.Load("Application"));
+builder.Services.AddApplicationInsightsTelemetry();
 
 var app = builder.Build();
 
