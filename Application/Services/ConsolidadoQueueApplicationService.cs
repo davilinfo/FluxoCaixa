@@ -40,8 +40,8 @@ namespace Application.Services
 
       if (records.Count > 0)
       {
-        consolidadoResponse.Created = records.First().Created;
-        consolidadoResponse.BalanceValue = records.First().Value;
+        consolidadoResponse.Created = records.Last().Created;
+        consolidadoResponse.BalanceValue = records.Last().Value;
         foreach (var record in records.Select(e => e.IdRecordNavigation))
         {
           var recordViewModel = _mapper.Map<RecordViewModel>(record);
@@ -60,8 +60,8 @@ namespace Application.Services
           records = _repositoryExtract.All().Where(e => e.IdAccountNavigation.Id == Guid.Parse(request.AccountId)
           && e.Created.Date == nearestRecord.Created.Date).ToList();
 
-          consolidadoResponse.Created = records.First().Created;
-          consolidadoResponse.BalanceValue = records.First().Value;
+          consolidadoResponse.Created = records.Last().Created;
+          consolidadoResponse.BalanceValue = records.Last().Value;
           foreach (var record in records.Select(e => e.IdRecordNavigation))
           {
             var recordViewModel = _mapper.Map<RecordViewModel>(record);

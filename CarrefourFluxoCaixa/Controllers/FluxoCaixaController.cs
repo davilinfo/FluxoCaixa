@@ -151,7 +151,7 @@ namespace CarrefourFluxoCaixa.Controllers
     /// </summary>
     /// <param name="request">Account number, email e dia</param>
     /// <returns></returns>
-    [HttpGet("GetExtrato", Name = "GetExtract")]
+    [HttpGet("GetExtrato", Name = "GetExtract")]    
     public async Task<IActionResult> GetExtract([FromQuery]GetExtractRequest request)
     {
       _logger.LogInformation($"Get extract request: {JsonSerializer.Serialize(request)}");
