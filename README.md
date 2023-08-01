@@ -9,6 +9,14 @@ Microserviço: independente para time, permite escalar horizontalmente e vertica
 
 ##CQRS (Não inteiramente já que não existe uma outra base de dados para read na solução): Consultas e persistência em database realizada em repositórios (Persistência), contratos repositórios e entidades em Domínio, Serviços contém regras de negócio e invocação de contratos, controller invocam serviços e fazem validação
 
+##Saga: FluxoCaixaConsolidado service RabbitMQ
+
+##Repository: EF
+
+##Strategy: EF depende de abstrações
+
+##Retry: tentativa de reconexão à base de dados
+
 ##AutoMapper: mapeamento entre viewModel, entidades, modelRequest
 
 ##Annotations: entidades e view models com características de campo e validação
