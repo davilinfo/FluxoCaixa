@@ -31,7 +31,11 @@ Microserviço: independente para time, permite escalar horizontalmente e vertica
 
 ##SQL Server 2016 gerado a partir de migrations
 ##IIS padrão de uso
-##Docker: deve ser realizado publish, gerar imagem e criar container, incluir atributo para permitir consulta a serviços externos --network host
+
+##Docker: deve ser realizado publish, gerar imagem e criar container, incluir atributo para permitir consulta a serviços externos --network host, connection string deve ser atualizada em appsettings.json para container linux (exemplo:
+"ConnectionStrings": {
+    "DefaultConnection": "Data Source=host.docker.internal,1433;Initial Catalog=FluxoCaixa;Integrated Security=False;User ID=user;Password=password;Encrypt=False;"
+  })
 
 Para publicar versão da aplicação faça na pasta da solução:
 Dotnet publish -c Debug
