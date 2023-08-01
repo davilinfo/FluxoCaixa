@@ -87,6 +87,7 @@ namespace Application.Services
         }
         else
         {
+          balance.Updated = DateTime.UtcNow;
           if (record.Type.ToString().ToLower() == ((char)RecordType.Debit).ToString().ToLower())
           {
             if (balance.Value >= record.Value)
