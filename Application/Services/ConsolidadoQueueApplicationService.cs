@@ -1,10 +1,10 @@
-﻿using Application.Exception;
-using Application.Interfaces;
+﻿using Application.Interfaces;
 using Application.Models.Request;
 using Application.Models.Response;
 using Application.Models.ViewModel;
 using AutoMapper;
 using Domain.Contract;
+using Microsoft.Extensions.Configuration;
 using RabbitMQ.Client;
 using System.Text;
 
@@ -14,10 +14,12 @@ namespace Application.Services
   {
     private IRepositoryExtract _repositoryExtract;
     private IMapper _mapper;
-    public ConsolidadoQueueApplicationService(IMapper mapper, IRepositoryExtract repositoryExtract)
+    private IConfiguration _config;    
+    public ConsolidadoQueueApplicationService(IMapper mapper, IRepositoryExtract repositoryExtract, IConfiguration configuration)
     {
       _repositoryExtract = repositoryExtract;
       _mapper = mapper;
+      _config = configuration;
     }
 
     public async Task<ConsolidadoResponse> GenerateConsolidado(GetExtractRequest request)
@@ -26,7 +28,10 @@ namespace Application.Services
 
       if (consolidadoResponse != null)
       {
-        SendToFluxoQueue(consolidadoResponse);
+        if (bool.Parse(_config.GetSection("AMQP:Activated").Value) == true)
+        {
+          SendToFluxoQueue(consolidadoResponse);
+        }
         return consolidadoResponse;
       }
 
@@ -83,8 +88,9 @@ namespace Application.Services
     }
 
     private void SendToFluxoQueue(ConsolidadoResponse consolidadoResponse)
-    {
-      var factory = new ConnectionFactory() { HostName = "localhost", UserName = "guest", Password = "guest" };
+    {      
+      var amqpPort = _config.GetSection("AMQP:Port").Value != null ? int.Parse(_config.GetSection("AMQP:Port").Value) : 5672;
+      var factory = new ConnectionFactory() { HostName = "localhost", UserName = "guest", Password = "guest", Port = amqpPort };
 
       using (var connection = factory.CreateConnection())
       {
