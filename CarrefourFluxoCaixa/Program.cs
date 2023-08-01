@@ -35,6 +35,7 @@ builder.Services.AddScoped<IApplicationServiceFluxoCaixa, FluxoCaixaApplicationS
 builder.Services.AddScoped<IConsolidadoQueueApplicationService, ConsolidadoQueueApplicationService>();
 
 builder.Services.AddAutoMapper(System.Reflection.Assembly.Load("Application"));
+builder.Services.AddApplicationInsightsTelemetry();
 
 var app = builder.Build();
 
