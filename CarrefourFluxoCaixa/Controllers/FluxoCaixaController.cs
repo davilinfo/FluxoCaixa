@@ -19,6 +19,7 @@ namespace CarrefourFluxoCaixa.Controllers
   {
     
     private readonly ILogger<FluxoCaixaController> _logger;
+    private readonly IConfiguration _config;
     private readonly IApplicationServiceAccount _applicationServiceAccount;
     private readonly IApplicationServiceBalance _applicationServiceBalance;
     private readonly IApplicationServiceFluxoCaixa _applicationServiceFluxoCaixa;
@@ -28,12 +29,14 @@ namespace CarrefourFluxoCaixa.Controllers
     /// Injeção de dependência em construtor
     /// </summary>
     /// <param name="logger"></param>
+    /// <param name="configuration"></param>
     /// <param name="applicationServiceAccount"></param>
     /// <param name="applicationServiceBalance"></param>
     /// <param name="applicationServiceFluxoCaixa"></param>
-    /// <param name="consolidadoQueueApplicationService"></param>
+    /// <param name="consolidadoQueueApplicationService"></param>    
     public FluxoCaixaController(
       ILogger<FluxoCaixaController> logger, 
+      IConfiguration configuration,
       IApplicationServiceAccount applicationServiceAccount,
       IApplicationServiceBalance applicationServiceBalance,
       IApplicationServiceFluxoCaixa applicationServiceFluxoCaixa,
@@ -41,6 +44,7 @@ namespace CarrefourFluxoCaixa.Controllers
       )
     {
       _logger = logger;
+      _config = configuration;
       _applicationServiceAccount = applicationServiceAccount;
       _applicationServiceBalance = applicationServiceBalance;
       _applicationServiceFluxoCaixa = applicationServiceFluxoCaixa;
@@ -246,7 +250,19 @@ namespace CarrefourFluxoCaixa.Controllers
         if (ModelState.IsValid)
         {
           var model = await _applicationServiceFluxoCaixa.AddAsync(request);
-          return Created($"fluxocaixa/getsaldo/{model?.IdAccountNavigation?.Id}", model);
+          if (model != null)
+          {
+            if (bool.Parse(_config.GetSection("AMQP:Activated").Value) == true)
+            {
+              var result = await _consolidadoQueueApplicationService.GenerateConsolidado(
+              new GetExtractRequest
+              {
+                AccountId = request.AccountId,
+                DiaMesAno = DateTime.UtcNow.ToString("ddMMyyyy")
+              });
+            }
+            return Created($"fluxocaixa/getsaldo/{model?.IdAccountNavigation?.Id}", model);
+          }
         }
         foreach (var item in ModelState.Values)
         {

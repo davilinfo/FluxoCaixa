@@ -110,6 +110,7 @@ namespace Application.Services
                             basicProperties: null,
                             body: complexBody);
         }
+        connection.Close();
       }
     }
   }
