@@ -36,7 +36,7 @@ Microserviço: independente para time, permite escalar horizontalmente e vertica
 "ConnectionStrings": {
     "DefaultConnection": "Data Source=host.docker.internal,1433;Initial Catalog=FluxoCaixa;Integrated Security=False;User ID=user;Password=password;Encrypt=False;"
   })
-alterar AMQP hostname para host.docker.interval
+alterar AMQP hostname para host.docker.internal
 
 Para publicar versão da aplicação faça na pasta da solução:
 Dotnet publish -c Debug
