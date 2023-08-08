@@ -47,3 +47,5 @@ docker build -f "D:\RestfulApi\CarrefourFluxoCaixa\CarrefourFluxoCaixa\Dockerfil
 
 Criar container a partir de imagem:
 docker run -dt -e "ASPNETCORE_ENVIRONMENT=Development" -e "ASPNETCORE_LOGGING__CONSOLE__DISABLECOLORS=true"  -p49155:80 --name carrefour_development carrefour:latest --network host
+
+Fluxo: ![image](https://github.com/davilinfo/Minsait-CarrefourFluxoCaixa/assets/18128361/dd7d5794-0603-4b27-94ac-c5a05f6e95a4)
