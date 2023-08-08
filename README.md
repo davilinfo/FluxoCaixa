@@ -30,6 +30,7 @@ Microserviço: independente para time, permite escalar horizontalmente e vertica
 ##Monitoramento Application insights, entretanto não está ativado
 
 ##SQL Server 2016 gerado a partir de migrations
+
 ##IIS padrão de uso
 
 ##Docker: deve ser realizado publish, gerar imagem e criar container, incluir atributo para permitir consulta a serviços externos --network host, connection string deve ser atualizada em appsettings.json para container linux (exemplo:
