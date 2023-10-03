@@ -6,38 +6,60 @@ using System.Text.Json;
 
 namespace CarrefourFluxoCaixa.Controllers
 {
+  /// <summary>
+  /// Controller responsável por criar conta fluxo de caixa a partir de um email
+  /// </summary>
   [ExcludeFromCodeCoverage]
   //[Authorize]
   [ApiController]
   [Route("[controller]")]
+  [Produces("application/json")]
   //[RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
   public class FluxoCaixaController : ControllerBase
   {
     
     private readonly ILogger<FluxoCaixaController> _logger;
+    private readonly IConfiguration _config;
     private readonly IApplicationServiceAccount _applicationServiceAccount;
     private readonly IApplicationServiceBalance _applicationServiceBalance;
-    private readonly IApplicationServiceRecord _applicationServiceRecord;
+    private readonly IApplicationServiceFluxoCaixa _applicationServiceFluxoCaixa;
+    private readonly IConsolidadoQueueApplicationService _consolidadoQueueApplicationService;
 
+    /// <summary>
+    /// Injeção de dependência em construtor
+    /// </summary>
+    /// <param name="logger"></param>
+    /// <param name="configuration"></param>
+    /// <param name="applicationServiceAccount"></param>
+    /// <param name="applicationServiceBalance"></param>
+    /// <param name="applicationServiceFluxoCaixa"></param>
+    /// <param name="consolidadoQueueApplicationService"></param>    
     public FluxoCaixaController(
       ILogger<FluxoCaixaController> logger, 
+      IConfiguration configuration,
       IApplicationServiceAccount applicationServiceAccount,
       IApplicationServiceBalance applicationServiceBalance,
-      IApplicationServiceRecord applicationServiceRecord
+      IApplicationServiceFluxoCaixa applicationServiceFluxoCaixa,
+      IConsolidadoQueueApplicationService consolidadoQueueApplicationService
       )
     {
       _logger = logger;
+      _config = configuration;
       _applicationServiceAccount = applicationServiceAccount;
       _applicationServiceBalance = applicationServiceBalance;
-      _applicationServiceRecord = applicationServiceRecord;
+      _applicationServiceFluxoCaixa = applicationServiceFluxoCaixa;
+      _consolidadoQueueApplicationService = consolidadoQueueApplicationService;
     }
 
     /// <summary>
-    /// Cria conta de fluxo de caixa
+    /// Cria conta de fluxo de caixa. Tudo inicia aqui, então crie uma conta de fluxo de caixa se ainda não criou
     /// </summary>
     /// <param name="request">Name e email</param>
     /// <returns></returns>
     [HttpPost("CriaContaFluxo")]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> CreateAccount([FromBody] AccountRequest request)
     {
       _logger.LogInformation($"Create account request: {JsonSerializer.Serialize(request)}");
@@ -67,11 +89,15 @@ namespace CarrefourFluxoCaixa.Controllers
     }
     
     /// <summary>
-    /// Para retornar uma conta informe um email
+    /// Para retornar uma conta informe um email (Observação: utilize o identificador da conta retornado nos métodos seguintes: id)
     /// </summary>
     /// <param name="request">Email</param>
     /// <returns></returns>
     [HttpGet("GetConta", Name = "GetAccount")]
+    [ProducesResponseType(StatusCodes.Status200OK)]    
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public IActionResult GetAccount([FromQuery]GetAccountRequest request)
     {
       _logger.LogInformation($"Get account request: {JsonSerializer.Serialize(request)}");
@@ -106,18 +132,27 @@ namespace CarrefourFluxoCaixa.Controllers
     }
     
     /// <summary>
-    /// Para retornar o saldo informe o número da conta e o email da conta
+    /// Para retornar o saldo informe o identificador da conta e o email da conta
     /// </summary>
     /// <param name="request">AccountNumber e Email</param>
     /// <returns></returns>
     [HttpGet("GetSaldo",Name = "GetBalance")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetBalance([FromQuery]GetBalanceRequest request)
     {
       _logger.LogInformation($"Get balance request: {JsonSerializer.Serialize(request)}");
       try
       {
-        if (ModelState.IsValid)
+        Guid id;
+        if (!Guid.TryParse(request.AccountId, out id))
         {
+          ModelState.AddModelError("Guid", "Identificador em formato inválido => guid");
+        }
+        if (ModelState.IsValid)
+        {          
           var result = await _applicationServiceBalance.GetByAccountId(Guid.Parse(request.AccountId));
           if (result == null)
           {
@@ -144,19 +179,39 @@ namespace CarrefourFluxoCaixa.Controllers
     }
    
     /// <summary>
-    /// Para retornar o extrato diário informe o dia mês e ano no formato ddmmaaaa
+    /// Para retornar o extrato diário informe o idenficador da conta, o dia mês e ano no formato ddmmaaaa
     /// </summary>
     /// <param name="request">Account number, email e dia</param>
     /// <returns></returns>
     [HttpGet("GetExtrato", Name = "GetExtract")]
-    public async Task<IActionResult> GetExtract(GetExtractRequest request)
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> GetExtract([FromQuery]GetExtractRequest request)
     {
       _logger.LogInformation($"Get extract request: {JsonSerializer.Serialize(request)}");
       try
       {
+        Guid id;
+        if (!Guid.TryParse(request.AccountId, out id))
+        {
+          ModelState.AddModelError("Guid", "Identificador em formato inválido => guid");
+        }
+        DateTime date;
+        if (!DateTime.TryParse($"{int.Parse(request.DiaMesAno.Substring(4))}/{int.Parse(request.DiaMesAno.Substring(2, 2))}/{int.Parse(request.DiaMesAno.Substring(0, 2))}", out date))
+        {
+          ModelState.AddModelError("diamesano", "Data inválida");
+        }
+
         if (ModelState.IsValid)
         {
-          return Ok("");
+          var result = await _consolidadoQueueApplicationService.GenerateConsolidado(request);   
+          if (result == null)
+          {
+            return NotFound("Fluxo de Conta ainda sem movimentação");
+          }
+          return Ok(result);
         }
         foreach (var item in ModelState.Values)
         {
@@ -177,7 +232,7 @@ namespace CarrefourFluxoCaixa.Controllers
     }
     
     /// <summary>
-    /// Para realizar um lançamento informe o número da conta, email, descrição do lançamento, tipo C ou D (Crédito ou Débito), valor
+    /// Para realizar um lançamento informe o número da conta, email, descrição do lançamento, type C ou D (C=Crédito, D=Débito), valor
     /// </summary>
     /// <param name="request">AccountNumber = número conta, Email = email, Description = descrição lançamento, RecordType = tipo, Value = valor</param>
     /// <returns></returns>
@@ -187,10 +242,27 @@ namespace CarrefourFluxoCaixa.Controllers
       _logger.LogInformation($"Record request: {JsonSerializer.Serialize(request)}");
       try
       {
+        Guid id;
+        if (!Guid.TryParse(request.AccountId, out id))
+        {
+          ModelState.AddModelError("Guid", "Identificador em formato inválido => guid");
+        }
         if (ModelState.IsValid)
         {
-          var model = await _applicationServiceRecord.AddAsync(request);
-          return Created($"fluxocaixa/getsaldo/{model?.IdAccountNavigation?.Id}", model);
+          var model = await _applicationServiceFluxoCaixa.AddAsync(request);
+          if (model != null)
+          {
+            if (bool.Parse(_config.GetSection("AMQP:Activated").Value) == true)
+            {
+              var result = await _consolidadoQueueApplicationService.GenerateConsolidado(
+              new GetExtractRequest
+              {
+                AccountId = request.AccountId,
+                DiaMesAno = DateTime.UtcNow.ToString("ddMMyyyy")
+              });
+            }
+            return Created($"fluxocaixa/getsaldo/{model?.IdAccountNavigation?.Id}", model);
+          }
         }
         foreach (var item in ModelState.Values)
         {

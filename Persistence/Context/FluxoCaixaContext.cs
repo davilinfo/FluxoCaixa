@@ -23,7 +23,7 @@ namespace Persistence.Context
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-      optionsBuilder.UseSqlServer(_configuration.GetConnectionString(_connectionString));
+      optionsBuilder.UseSqlServer(_configuration.GetConnectionString(_connectionString), o => o.EnableRetryOnFailure());
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

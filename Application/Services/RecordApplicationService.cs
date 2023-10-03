@@ -7,7 +7,6 @@ using AutoMapper;
 using Domain.Contract;
 using Domain.EF;
 using System.Diagnostics.CodeAnalysis;
-using System.Transactions;
 
 namespace Application.Services
 {
@@ -18,14 +17,21 @@ namespace Application.Services
     private readonly IRepositoryRecord _repositoryRecord;
     private readonly IRepositoryBalance _repositoryBalance;
     private readonly IRepositoryAccount _repositoryAccount;
+    private readonly IRepositoryFluxoCaixa _repositoryFluxoCaixa;
     const string _contaInvalidaMsg = "Conta inválida";
     const string _contaSaldoInsuficienteMsg = "Saldo insuficiente";
-    public RecordApplicationService(IMapper mapper, IRepositoryRecord repositoryRecord, IRepositoryBalance repositoryBalance, IRepositoryAccount repositoryAccount) 
+    public RecordApplicationService(
+      IMapper mapper, 
+      IRepositoryRecord repositoryRecord, 
+      IRepositoryBalance repositoryBalance, 
+      IRepositoryAccount repositoryAccount,
+      IRepositoryFluxoCaixa repositoryFluxoCaixa) 
     {
       _mapper = mapper;      
       _repositoryRecord = repositoryRecord;
       _repositoryBalance = repositoryBalance;
       _repositoryAccount = repositoryAccount;
+      _repositoryFluxoCaixa = repositoryFluxoCaixa;
     }
 
     public async Task<RecordViewModel> Add(RecordViewModel model)
@@ -85,26 +91,26 @@ namespace Application.Services
     private async Task AddRecordAndUpdateBalanceFromRecordInTransaction(Record record)
     {      
       if (record != null)
-      {
-
-        await _repositoryRecord.Add(record);
-        using (var scope = new TransactionScope(TransactionScopeOption.Required))
-        {          
-          var balance = _repositoryBalance.All().FirstOrDefault(b => b.IdAccountNavigation.Id == record.IdAccountNavigation.Id);
-          if (balance == null)
-          {
-            var newBalance = new Balance()
-            {
-              Created = DateTime.UtcNow,
-              IdAccountNavigation = record.IdAccountNavigation,
-              Value = 0,
-              Updated = DateTime.UtcNow
-            };
-
-            var guid = await _repositoryBalance.Add(newBalance);
-            balance = await _repositoryBalance.GetById(guid);
+      {                          
+        var balance = _repositoryBalance.All().FirstOrDefault(b => b.IdAccountNavigation.Id == record.IdAccountNavigation.Id);
+        if (balance == null)
+        {
+          if (record.Type.ToString().ToLower() == ((char)RecordType.Debit).ToString().ToLower())
+          {            
+            throw new BusinessException(_contaSaldoInsuficienteMsg);            
           }
+          var newBalance = new Balance()
+          {
+            Created = DateTime.UtcNow,
+            IdAccountNavigation = record.IdAccountNavigation,
+            Value = record.Value,
+            Updated = DateTime.UtcNow
+          };
 
+          var guid = await _repositoryFluxoCaixa.AddBalance(newBalance, record);
+        }
+        else
+        {
           if (record.Type.ToString().ToLower() == ((char)RecordType.Debit).ToString().ToLower())
           {
             if (balance.Value >= record.Value)
@@ -122,12 +128,8 @@ namespace Application.Services
             balance.Value += record.Value;
           }
 
-          if (await _repositoryBalance.Update(balance) >= 0)
-          {
-            scope.Complete();            
-          }
-          
-        }
+          await _repositoryFluxoCaixa.UpdateBalance(balance, record);
+        }        
       }
     }
 

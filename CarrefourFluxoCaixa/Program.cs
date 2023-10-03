@@ -1,16 +1,12 @@
 using Application.Interfaces;
-using Application.Models.ViewModel;
 using Application.Services;
 using Domain.Contract;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Hosting.Server;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Web;
+using Microsoft.OpenApi.Models;
 using Persistence.Context;
 using Persistence.Repository;
-using static System.Net.Mime.MediaTypeNames;
-
-const string _connectionString = "name=ConnectionStrings:DefaultConnection";
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +19,20 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(gen =>
 {
+  gen.SwaggerDoc("v1", new OpenApiInfo
+  {
+    Version = "v1",
+    Title = "Mansait - Carrefour API",
+    Description = "Um Web API em ASP.NET Core Web API para gerenciamento de fluxo de caixa. É necessário você estar executando o RabbitMQ na porta padrão para retornar extrato de conta!",    
+    Contact = new OpenApiContact
+    {
+      Name = "Davi Lima Alves",
+      Url = new Uri("https://linkedin.com/in/davilalves")
+    }    
+  });
+
+  var xmlFileName = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+  gen.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFileName));
 });
 builder.Services.AddDbContext<FluxoCaixaContext>();
 
@@ -30,13 +40,16 @@ builder.Services.AddScoped<IRepositoryAccount, RepositoryAccount>();
 builder.Services.AddScoped<IRepositoryBalance, RepositoryBalance>();
 builder.Services.AddScoped<IRepositoryExtract, RepositoryExtract>();
 builder.Services.AddScoped<IRepositoryRecord, RepositoryRecord>();
+builder.Services.AddScoped<IRepositoryFluxoCaixa, RepositoryFluxoCaixa>();
 
 builder.Services.AddScoped<IApplicationServiceAccount, AccountApplicationService>();
 builder.Services.AddScoped<IApplicationServiceBalance, BalanceApplicationService>();
 builder.Services.AddScoped<IApplicationServiceRecord, RecordApplicationService>();
 builder.Services.AddScoped<IApplicationServiceFluxoCaixa, FluxoCaixaApplicationService>();
+builder.Services.AddScoped<IConsolidadoQueueApplicationService, ConsolidadoQueueApplicationService>();
 
 builder.Services.AddAutoMapper(System.Reflection.Assembly.Load("Application"));
+builder.Services.AddApplicationInsightsTelemetry();
 
 var app = builder.Build();
 

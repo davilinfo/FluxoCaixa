@@ -3,6 +3,7 @@ using Application.Interfaces;
 using Application.Models.Request;
 using Application.Models.ViewModel;
 using AutoMapper;
+using Domain.Account.Commands;
 using Domain.Contract;
 using Domain.EF;
 using System.Diagnostics.CodeAnalysis;
@@ -15,6 +16,7 @@ namespace Application.Services
     private readonly IMapper _mapper;
     private readonly IRepositoryAccount _repositoryAccount;
     const string _emailExistenteMsg = "Já existe uma conta informada com esse email!";
+    const string _contaExistenteMsg = "Erro em numeração de conta, tente criar novamente!";
     const string _contaNaoEncontradaMsg = "Conta não encontrada!";
     public AccountApplicationService(IMapper mapper, IRepositoryAccount repositoryAccount)
     {
@@ -22,15 +24,18 @@ namespace Application.Services
       _repositoryAccount = repositoryAccount;
     }
     public async Task<AccountViewModel> Add(AccountViewModel model)
-    {
-      model.Created = DateTime.UtcNow;
-      var entity = _mapper.Map<Account>(model);
+    {      
+      var registerAccount = _mapper.Map<RegisterAccountCommand>(model);
 
-      HandleValidation(entity);
+      if (registerAccount.IsValid())
+      {
+        var entity = registerAccount.CreateAccount();
+        HandleValidation(entity);
 
-      var guid = await _repositoryAccount.Add(entity);      
+        var guid = await _repositoryAccount.Add(entity);
 
-      model = _mapper.Map<AccountViewModel>(entity);
+        model = _mapper.Map<AccountViewModel>(entity);
+      }      
 
       return model;
     }
@@ -63,10 +68,20 @@ namespace Application.Services
         throw new BusinessException(_contaNaoEncontradaMsg);
       }
 
-      actual.Name = model.Name;
-      actual.Email = model.Email;
+      var account = _mapper.Map<UpdateAccountCommand>(actual);
 
-      await _repositoryAccount.Update(actual);
+      if (account != null && actual.Id == model.Id) 
+      { 
+        if (account.IsValid())
+        {
+          actual = account.UpdateCommand(actual);
+          await _repositoryAccount.Update(actual);
+        }
+        else
+        {
+          throw new BusinessException(_contaNaoEncontradaMsg);
+        }
+      }           
 
       model = _mapper.Map<AccountViewModel>(actual);
 
@@ -87,6 +102,10 @@ namespace Application.Services
       if (_repositoryAccount.All().Any(a => a.Email == model.Email))
       {
         throw new BusinessException(_emailExistenteMsg);
+      }
+      if (_repositoryAccount.All().Any(a => a.AccountNumber == model.AccountNumber))
+      {
+        throw new BusinessException(_contaExistenteMsg);
       }
     }
   }
