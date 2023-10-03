@@ -7,7 +7,7 @@ SOLID Principles: baseado em interfaces para serviços e entidades
 
 Microserviço: independente para time, permite escalar horizontalmente e verticalmente
 
-##CQRS (Não inteiramente já que não existe uma outra base de dados para read na solução, nem foi implementado Commands em dominio ou Query Results, business layer está em application service com validação lá também, comunicação com repositório, mas existe view model e models): Consultas e persistência em database realizada em repositórios (Persistência), contratos repositórios e entidades em Domínio, Serviços contém regras de negócio e invocação de contratos, controller invocam serviços e fazem validação
+##CQRS (Não inteiramente já que não existe uma outra base de dados para read na solução, então não tem implementação de Query Results. Existe commands apenas para Account (já que é um teste), business layer está em application service com validação lá também, comunicação com repositório, mas existe view model e models): Consultas e persistência em database realizada em repositórios (Persistência), contratos repositórios e entidades em Domínio, Serviços contém regras de negócio e invocação de contratos, controller invocam serviços e fazem validação
 
 ##Saga: FluxoCaixaConsolidado service RabbitMQ
 
