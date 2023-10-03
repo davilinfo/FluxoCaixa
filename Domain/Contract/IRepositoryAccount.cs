@@ -1,8 +1,7 @@
-﻿using Domain.EF;
-
+﻿
 namespace Domain.Contract
 {
-  public interface IRepositoryAccount : IRepository<Account>
+  public interface IRepositoryAccount : IRepository<Domain.EF.Account>
   {
   }
 }

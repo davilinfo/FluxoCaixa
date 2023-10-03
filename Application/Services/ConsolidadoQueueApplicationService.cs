@@ -43,6 +43,7 @@ namespace Application.Services
     private async Task<ConsolidadoResponse> Generate(GetExtractRequest request)
     {
       var consolidadoResponse = new ConsolidadoResponse();
+      consolidadoResponse.Id = Guid.NewGuid();
       var listRecords = new List<RecordViewModel>();
       var date = new DateTime(int.Parse(request.DiaMesAno.Substring(4)), int.Parse(request.DiaMesAno.Substring(2,2)), int.Parse(request.DiaMesAno.Substring(0,2)));
 
