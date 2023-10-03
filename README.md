@@ -7,7 +7,7 @@ SOLID Principles: baseado em interfaces para serviços e entidades
 
 Microserviço: independente para time, permite escalar horizontalmente e verticalmente
 
-##CQRS (Não inteiramente já que não existe uma outra base de dados para read na solução, então não tem implementação de Query Results. Existe commands apenas para Account (já que é um teste), business layer está em application service com validação lá também, comunicação com repositório, mas existe view model e models): Consultas e persistência em database realizada em repositórios (Persistência), contratos repositórios, commands (Account), validations commands(Account) e entities em Domínio, Serviços contém regras de negócio e invocação de contratos, controller invocam serviços
+##CQRS (Não inteiramente já que não existe uma outra base de dados para read na solução, então não tem implementação de Query Results. Existe commands e validation commands apenas para Account (já que é um teste), business layer está em application service com validação lá também, repository pattern, view model e models): Consultas e persistência em database realizada em repositórios (Persistência), contratos repositórios, commands (Account), validations commands(Account) e entities em Domínio, Serviços invocam commands e repositories através de contratos, controller invocam serviços
 
 ##Saga: FluxoCaixaConsolidado service RabbitMQ
 
@@ -17,7 +17,7 @@ Microserviço: independente para time, permite escalar horizontalmente e vertica
 
 ##Retry: tentativa de reconexão à base de dados
 
-##AutoMapper: mapeamento entre viewModel, entidades, modelRequest
+##AutoMapper: mapeamento entre viewModel, entidades, modelRequest, commands
 
 ##Annotations: entidades e view models com características de campo e validação
 
@@ -27,9 +27,9 @@ Microserviço: independente para time, permite escalar horizontalmente e vertica
 
 ##Unit Tests: Utilizado Moq e VisualStudioUnitTests. Realizado unit testes com padrão AAA (arrange act assert) de um serviço ApplicationServiceBalanceUnitTest. Cobre métodos, exceções 
 
-##Monitoramento Application insights, entretanto não está ativado
+##Monitoramento Application insights
 
-##SQL Server 2016 gerado a partir de migrations
+##SQL Server 2016 database gerado a partir de migrations
 
 ##IIS padrão de uso
 
