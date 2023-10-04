@@ -10,13 +10,13 @@ namespace Domain.EF
   public class Account : GuidEntity
   {
     [Required(ErrorMessage = "AccountNumber é obrigatório")]
-    public long AccountNumber { get; private set; }
+    public long AccountNumber { get; set; }
     [Required(ErrorMessage = "Name é obrigatório")]
-    public string Name { get; private set; }
+    public string Name { get; set; }
     [Required(ErrorMessage = "Email é obrigatório")]    
-    public string Email { get; private set; }
-    public DateTime Created { get; private set; }
-    public DateTime? Updated { get; private set; }
+    public string Email { get; set; }
+    public DateTime Created { get; set; }
+    public DateTime? Updated { get; set; }
     
     public Account(long AccountNumber, string Name, string Email)
     {
@@ -27,7 +27,7 @@ namespace Domain.EF
       this.Created = DateTime.UtcNow;
       this.Updated = null;
     }
-
+    public Account() { }
     public Account Update(long AccountNumber, string Name, string Email)
     {      
       this.AccountNumber = AccountNumber;

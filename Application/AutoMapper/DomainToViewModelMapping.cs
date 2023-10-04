@@ -2,6 +2,7 @@
 using AutoMapper;
 using Domain.Account.Commands;
 using Domain.EF;
+using Domain.Record.Commands;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Application.AutoMapper
@@ -12,7 +13,8 @@ namespace Application.AutoMapper
     public DomainToViewModelMapping() { 
       CreateMap<Account, AccountViewModel>();
       CreateMap<Account, UpdateAccountCommand>();
-      CreateMap<AccountViewModel, RegisterAccountCommand>();
+      CreateMap<RegisterAccountCommand, AccountViewModel>();      
+      CreateMap<RegisterRecordCommand, RecordViewModel>();
       CreateMap<Balance, BalanceViewModel>();
       CreateMap<Extract, ExtractViewModel>();
       CreateMap<Record, RecordViewModel>();

@@ -2,7 +2,7 @@
 
 namespace Domain.Contract
 {
-  public interface IRepositoryRecord : IRepository<Record>
+  public interface IRepositoryRecord : IRepository<EF.Record>
   {
   }
 }

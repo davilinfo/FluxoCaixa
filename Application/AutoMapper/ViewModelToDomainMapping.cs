@@ -1,6 +1,8 @@
 ﻿using Application.Models.ViewModel;
 using AutoMapper;
+using Domain.Account.Commands;
 using Domain.EF;
+using Domain.Record.Commands;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Application.AutoMapper
@@ -13,6 +15,8 @@ namespace Application.AutoMapper
       CreateMap<BalanceViewModel, Balance>();
       CreateMap<ExtractViewModel, Extract>();
       CreateMap<RecordViewModel, Record>();
+      CreateMap<RecordViewModel, RegisterRecordCommand>();
+      CreateMap<AccountViewModel, RegisterAccountCommand>();
     }
   }
 }

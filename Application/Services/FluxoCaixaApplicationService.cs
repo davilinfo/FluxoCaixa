@@ -6,6 +6,7 @@ using Application.Models.ViewModel;
 using AutoMapper;
 using Domain.Contract;
 using Domain.EF;
+using Domain.Record.Commands;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Application.Services
@@ -45,14 +46,19 @@ namespace Application.Services
     }
     private async Task<RecordViewModel> Add(RecordViewModel model)
     {
-      model.DateTime = DateTime.UtcNow;
-      var entity = _mapper.Map<Record>(model);
+      var registerRecord = _mapper.Map<RegisterRecordCommand>(model);
 
-      await HandleValidation(entity);
+      if (registerRecord != null && registerRecord.IsValid())
+      {
+        var entity = registerRecord.CreateRecord();
+        entity.IdAccountNavigation = registerRecord.IdAccountNavigation;
 
-      await AddRecordUpdateBalanceFromRecord(entity);
+        await HandleValidation(entity);
 
-      model = _mapper.Map<RecordViewModel>(entity);
+        await AddRecordUpdateBalanceFromRecord(entity);
+
+        model = _mapper.Map<RecordViewModel>(entity);
+      }      
 
       return model;
     }

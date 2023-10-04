@@ -10,8 +10,7 @@ namespace Application.AutoMapper
   public class RequestToViewModelMapping : Profile
   {
     public RequestToViewModelMapping() {
-      CreateMap<AccountRequest, AccountViewModel>();
-      CreateMap<RegisterAccountCommand, AccountViewModel>();
+      CreateMap<AccountRequest, AccountViewModel>();      
       CreateMap<GetAccountRequest, AccountViewModel>();
       CreateMap<RecordRequest, RecordViewModel>();
     }    

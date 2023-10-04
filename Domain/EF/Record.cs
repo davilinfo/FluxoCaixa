@@ -12,7 +12,7 @@ namespace Domain.EF
   {    
     [Required(AllowEmptyStrings = false, ErrorMessage = "History é obrigatório")]
     [MaxLength(500,ErrorMessage = "O tamanho máximo do campo são 500 caracteres")]
-    public required string History { get; set; }
+    public string History { get; set; }
     [Required(ErrorMessage = "DateTime é obrigatório")]
     public DateTime DateTime { get; set; }
     [Required(ErrorMessage = "Type é obrigatório")]
@@ -22,6 +22,15 @@ namespace Domain.EF
     public double Value { get; set; }
     [Required(ErrorMessage = "IdAccount é obrigatório")]
     [ForeignKey("IdAccount")]
-    public required virtual Account IdAccountNavigation { get; set; } 
+    public virtual Account IdAccountNavigation { get; set; } 
+
+    public Record(string History, DateTime DateTime, char Type, double Value)
+    {
+      this.Id = Guid.NewGuid();
+      this.History = History;
+      this.DateTime = DateTime;
+      this.Type = Type;
+      this.Value = Value;      
+    }
   }
 }
