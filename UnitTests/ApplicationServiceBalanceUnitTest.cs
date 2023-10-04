@@ -3,7 +3,6 @@ using Application.Models.ViewModel;
 using Application.Services;
 using Domain.Contract;
 using Domain.EF;
-using System.Runtime.CompilerServices;
 
 namespace UnitTests
 {
@@ -18,7 +17,7 @@ namespace UnitTests
       var mockRepositoryBalance = new Mock<IRepositoryBalance>();
 
       var accountViewModel = new AccountViewModel { Id = Guid.NewGuid(), Name = "teste", Email = "teste@example.com", Created = new DateTime(2023, 07, 30), Updated = new DateTime(2023, 07, 30) };
-      var account = new Account { Id = accountViewModel.Id, Name = "teste", Email = "teste@example.com", Created = new DateTime(2023, 07, 30), Updated = new DateTime(2023, 07, 30) };
+      var account = new Account (0, "teste", "teste@example.com") { Id = accountViewModel.Id, Created = new DateTime(2023, 07, 30), Updated = new DateTime(2023, 07, 30) };
       var balanceViewModel = new BalanceViewModel { Created = new DateTime(2023, 07, 30), Updated = new DateTime(2023, 07, 30), Value = 0, IdAccountNavigation = accountViewModel };
       var balance = new Balance { Id = Guid.NewGuid(), Created = new DateTime(2023, 07, 30), Updated = new DateTime(2023, 07, 30), Value = 0, IdAccountNavigation = account };
       var newBalance = new BalanceViewModel { Id = balance.Id, Created = new DateTime(2023, 07, 30), Updated = new DateTime(2023, 07, 30), Value = 0, IdAccountNavigation = accountViewModel };
@@ -70,7 +69,7 @@ namespace UnitTests
       var mockRepositoryBalance = new Mock<IRepositoryBalance>();
 
       var accountViewModel = new AccountViewModel { Id = Guid.Parse(guid), Name = "teste", Email = "teste@example.com", Created = new DateTime(2023, 07, 30), Updated = new DateTime(2023, 07, 30) };
-      var account = new Account { Id = accountViewModel.Id, Name = "teste", Email = "teste@example.com", Created = new DateTime(2023, 07, 30), Updated = new DateTime(2023, 07, 30) };      
+      var account = new Account (0, "teste", "teste@example.com") { Id = accountViewModel.Id, Created = new DateTime(2023, 07, 30), Updated = new DateTime(2023, 07, 30) };      
       var balance = new Balance { Id = Guid.NewGuid(), Created = new DateTime(2023, 07, 30), Updated = new DateTime(2023, 07, 30), Value = 0, IdAccountNavigation = account };
       var balanceViewModel = new BalanceViewModel { Id = balance.Id, Created = new DateTime(2023, 07, 30), Updated = new DateTime(2023, 07, 30), Value = 0, IdAccountNavigation = accountViewModel };
 
@@ -104,7 +103,7 @@ namespace UnitTests
       var mockRepositoryBalance = new Mock<IRepositoryBalance>();
 
       var accountViewModel = new AccountViewModel { Id = Guid.Parse(guid), Name = "teste", Email = "teste@example.com", Created = new DateTime(2023, 07, 30), Updated = new DateTime(2023, 07, 30) };
-      var account = new Account { Id = accountViewModel.Id, Name = "teste", Email = "teste@example.com", Created = new DateTime(2023, 07, 30), Updated = new DateTime(2023, 07, 30) };
+      var account = new Account (0, "teste", "teste@example.com") { Id = accountViewModel.Id, Created = new DateTime(2023, 07, 30), Updated = new DateTime(2023, 07, 30) };
       
       var repoAccount = mockRepositoryAccount.Setup(b => b.GetById(Guid.Parse(guid))).Returns(Task.FromResult<Account>(null));
       repoAccount.Verifiable();      
@@ -126,7 +125,7 @@ namespace UnitTests
       var mockRepositoryBalance = new Mock<IRepositoryBalance>();
 
       var accountViewModel = new AccountViewModel { Id = Guid.Parse(guid), Name = "teste", Email = "teste@example.com", Created = new DateTime(2023, 07, 30), Updated = new DateTime(2023, 07, 30) };
-      var account = new Account { Id = accountViewModel.Id, Name = "teste", Email = "teste@example.com", Created = new DateTime(2023, 07, 30), Updated = new DateTime(2023, 07, 30) };
+      var account = new Account(0, "teste", "teste@example.com") { Id = accountViewModel.Id, Created = new DateTime(2023, 07, 30), Updated = new DateTime(2023, 07, 30) };
             
       var repoAccount = mockRepositoryAccount.Setup(b => b.GetById(Guid.Parse(guid))).Returns(Task.FromResult(account));
       repoAccount.Verifiable();
@@ -152,7 +151,7 @@ namespace UnitTests
       var mockRepositoryBalance = new Mock<IRepositoryBalance>();
 
       var accountViewModel = new AccountViewModel { Id = Guid.NewGuid(), Name = "teste", Email = "teste@example.com", Created = new DateTime(2023, 07, 30), Updated = new DateTime(2023, 07, 30) };
-      var account = new Account { Id = accountViewModel.Id, Name = "teste", Email = "teste@example.com", Created = new DateTime(2023, 07, 30), Updated = new DateTime(2023, 07, 30) };
+      var account = new Account(0, "teste", "teste@example.com") { Id = accountViewModel.Id, Created = new DateTime(2023, 07, 30), Updated = new DateTime(2023, 07, 30) };
       var balance = new Balance { Id = Guid.Parse(guid), Created = new DateTime(2023, 07, 30), Updated = new DateTime(2023, 07, 30), Value = 0, IdAccountNavigation = account };
       var balanceViewModel = new BalanceViewModel { Id = balance.Id, Created = new DateTime(2023, 07, 30), Updated = new DateTime(2023, 07, 30), Value = 0, IdAccountNavigation = accountViewModel };
 
@@ -201,7 +200,7 @@ namespace UnitTests
       var mockRepositoryBalance = new Mock<IRepositoryBalance>();
 
       var accountViewModel = new AccountViewModel { Id = Guid.NewGuid(), Name = "teste", Email = "teste@example.com", Created = new DateTime(2023, 07, 30), Updated = new DateTime(2023, 07, 30) };
-      var account = new Account { Id = accountViewModel.Id, Name = "teste", Email = "teste@example.com", Created = new DateTime(2023, 07, 30), Updated = new DateTime(2023, 07, 30) };
+      var account = new Account(0, "teste", "teste@example.com") { Id = accountViewModel.Id, Created = new DateTime(2023, 07, 30), Updated = new DateTime(2023, 07, 30) };
       var balance = new Balance { Id = Guid.Parse(guid), Created = new DateTime(2023, 07, 30), Updated = new DateTime(2023, 07, 30), Value = 0, IdAccountNavigation = account };
       var balanceViewModel = new BalanceViewModel { Id = balance.Id, Created = new DateTime(2023, 07, 30), Updated = new DateTime(2023, 07, 30), Value = 0, IdAccountNavigation = accountViewModel };
 
@@ -230,7 +229,7 @@ namespace UnitTests
       var mockRepositoryBalance = new Mock<IRepositoryBalance>();
 
       var accountViewModel = new AccountViewModel { Id = Guid.Parse(guid), Name = "teste", Email = "teste@example.com", Created = new DateTime(2023, 07, 30), Updated = new DateTime(2023, 07, 30) };
-      var account = new Account { Id = accountViewModel.Id, Name = "teste", Email = "teste@example.com", Created = new DateTime(2023, 07, 30), Updated = new DateTime(2023, 07, 30) };
+      var account = new Account(0, "teste", "teste@example.com") { Id = accountViewModel.Id, Created = new DateTime(2023, 07, 30), Updated = new DateTime(2023, 07, 30) };
       var balance = new Balance { Id = Guid.NewGuid(), Created = new DateTime(2023, 07, 30), Updated = new DateTime(2023, 07, 30), Value = 0, IdAccountNavigation = account };
       var balanceViewModel = new BalanceViewModel { Id = balance.Id, Created = new DateTime(2023, 07, 30), Updated = new DateTime(2023, 07, 30), Value = 0, IdAccountNavigation = accountViewModel };
 
@@ -251,7 +250,7 @@ namespace UnitTests
       var mockRepositoryBalance = new Mock<IRepositoryBalance>();
 
       var accountViewModel = new AccountViewModel { Id = Guid.NewGuid(), Name = "teste", Email = "teste@example.com", Created = new DateTime(2023, 07, 30), Updated = new DateTime(2023, 07, 30) };
-      var account = new Account { Id = accountViewModel.Id, Name = "teste", Email = "teste@example.com", Created = new DateTime(2023, 07, 30), Updated = new DateTime(2023, 07, 30) };
+      var account = new Account(0, "teste", "teste@example.com") { Id = accountViewModel.Id, Created = new DateTime(2023, 07, 30), Updated = new DateTime(2023, 07, 30) };
       var balance = new Balance { Id = Guid.Parse(guid), Created = new DateTime(2023, 07, 30), Updated = new DateTime(2023, 07, 30), Value = 0, IdAccountNavigation = account };
       var balanceViewModel = new BalanceViewModel { Id = balance.Id, Created = new DateTime(2023, 07, 30), Updated = new DateTime(2023, 07, 30), Value = 0, IdAccountNavigation = accountViewModel };
 

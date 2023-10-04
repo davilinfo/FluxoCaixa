@@ -10,11 +10,11 @@ namespace Domain.EF
   public class Account : GuidEntity
   {
     [Required(ErrorMessage = "AccountNumber é obrigatório")]
-    public long AccountNumber { get; set; }
+    public long AccountNumber { get; private set; }
     [Required(ErrorMessage = "Name é obrigatório")]
-    public string Name { get; set; }
+    public string Name { get; private set; }
     [Required(ErrorMessage = "Email é obrigatório")]    
-    public string Email { get; set; }
+    public string Email { get; private set; }
     public DateTime Created { get; set; }
     public DateTime? Updated { get; set; }
     

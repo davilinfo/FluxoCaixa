@@ -17,22 +17,19 @@ namespace Application.Services
     private readonly IMapper _mapper;
     private readonly IRepositoryFluxoCaixa _repositoryFluxoCaixa;
     private readonly IRepositoryBalance _repositoryBalance;
-    private readonly IRepositoryAccount _repositoryAccount;
-    private readonly IRepositoryExtract _repositoryExtract;
+    private readonly IRepositoryAccount _repositoryAccount;    
     const string _contaInvalidaMsg = "Conta inválida";
     const string _contaSaldoInsuficienteMsg = "Saldo insuficiente";    
 
     public FluxoCaixaApplicationService(IMapper mapper, 
       IRepositoryAccount repositoryAccount, 
       IRepositoryFluxoCaixa repositoryFluxoCaixa, 
-      IRepositoryBalance repositoryBalance,
-      IRepositoryExtract repositoryExtract)
+      IRepositoryBalance repositoryBalance)
     {
       _mapper = mapper;
       _repositoryBalance = repositoryBalance;
       _repositoryFluxoCaixa = repositoryFluxoCaixa;
-      _repositoryAccount = repositoryAccount;
-      _repositoryExtract = repositoryExtract;
+      _repositoryAccount = repositoryAccount;      
     }
     public async Task<RecordViewModel> AddAsync(RecordRequest recordRequest)
     {
