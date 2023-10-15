@@ -1,6 +1,8 @@
 using Application.Interfaces;
 using Application.Models.Request;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Web.Resource;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 
@@ -10,11 +12,11 @@ namespace CarrefourFluxoCaixa.Controllers
   /// Controller responsável por criar conta fluxo de caixa a partir de um email
   /// </summary>
   [ExcludeFromCodeCoverage]
-  //[Authorize]
+  [Authorize]
   [ApiController]
   [Route("[controller]")]
   [Produces("application/json")]
-  //[RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
+  [RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
   public class FluxoCaixaController : ControllerBase
   {
     
