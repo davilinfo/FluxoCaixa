@@ -1,7 +1,9 @@
-﻿using Domain.Commands;
+﻿using System.Diagnostics.CodeAnalysis;
+using Domain.Commands;
 
 namespace Domain.Account.Commands
 {
+  [ExcludeFromCodeCoverage]
   public abstract class AccountCommand : Command
   {
     public Guid Id { get; protected set; }

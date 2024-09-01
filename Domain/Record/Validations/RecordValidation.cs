@@ -1,8 +1,10 @@
-﻿using Domain.Record.Commands;
+﻿using System.Diagnostics.CodeAnalysis;
+using Domain.Record.Commands;
 using FluentValidation;
 
 namespace Domain.Record.Validations
 {
+  [ExcludeFromCodeCoverage]
   public class RecordValidation<T> : AbstractValidator<T> where T : RecordCommand
   {
     public void ValidateHistory()

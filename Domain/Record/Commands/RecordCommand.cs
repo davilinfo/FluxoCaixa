@@ -1,7 +1,9 @@
-﻿using Domain.Commands;
+﻿using System.Diagnostics.CodeAnalysis;
+using Domain.Commands;
 
 namespace Domain.Record.Commands
 {
+  [ExcludeFromCodeCoverage]
   public abstract class RecordCommand : Command
   {
     public Guid Id { get; protected set; }

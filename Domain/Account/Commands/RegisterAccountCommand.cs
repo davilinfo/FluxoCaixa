@@ -1,7 +1,9 @@
-﻿using Domain.Account.Validations;
+﻿using System.Diagnostics.CodeAnalysis;
+using Domain.Account.Validations;
 
 namespace Domain.Account.Commands
 {
+  [ExcludeFromCodeCoverage]
   public class RegisterAccountCommand : AccountCommand
   {
     public RegisterAccountCommand(long accountNumber, string name, string email)

@@ -1,8 +1,10 @@
-﻿using Domain.Account.Commands;
+﻿using System.Diagnostics.CodeAnalysis;
+using Domain.Account.Commands;
 using FluentValidation;
 
 namespace Domain.Account.Validations
 {
+  [ExcludeFromCodeCoverage]
   public abstract class AccountValidation<T> : AbstractValidator<T> where T : AccountCommand
   {
     public void ValidateAccountNumber()

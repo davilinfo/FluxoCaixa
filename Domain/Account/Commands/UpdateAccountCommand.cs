@@ -1,7 +1,9 @@
-﻿using Domain.Account.Validations;
+﻿using System.Diagnostics.CodeAnalysis;
+using Domain.Account.Validations;
 
 namespace Domain.Account.Commands
 {
+  [ExcludeFromCodeCoverage]
   public class UpdateAccountCommand : AccountCommand
   {
     public UpdateAccountCommand(Guid id, long accountNumber, string name, string email)
