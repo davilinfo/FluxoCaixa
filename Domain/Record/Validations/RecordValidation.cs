@@ -1,10 +1,6 @@
-<<<<<<< Updated upstream
-﻿using Domain.Record.Commands;
-=======
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Reflection.PortableExecutable;
 using Domain.Record.Commands;
->>>>>>> Stashed changes
 using FluentValidation;
 
 namespace Domain.Record.Validations
