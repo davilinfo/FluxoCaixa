@@ -9,7 +9,7 @@ using System.Text.Json;
 namespace CarrefourFluxoCaixa.Controllers
 {
   /// <summary>
-  /// Controller responsável por criar conta fluxo de caixa a partir de um email
+  /// Controller responsï¿½vel por criar conta fluxo de caixa a partir de um email
   /// </summary>
   [ExcludeFromCodeCoverage]
   [Authorize]
@@ -28,7 +28,7 @@ namespace CarrefourFluxoCaixa.Controllers
     private readonly IConsolidadoQueueApplicationService _consolidadoQueueApplicationService;
 
     /// <summary>
-    /// Injeção de dependência em construtor
+    /// Injeï¿½ï¿½o de dependï¿½ncia em construtor
     /// </summary>
     /// <param name="logger"></param>
     /// <param name="configuration"></param>
@@ -54,7 +54,7 @@ namespace CarrefourFluxoCaixa.Controllers
     }
 
     /// <summary>
-    /// Cria conta de fluxo de caixa. Tudo inicia aqui, então crie uma conta de fluxo de caixa se ainda não criou
+    /// Cria conta de fluxo de caixa. Tudo inicia aqui, entï¿½o crie uma conta de fluxo de caixa se ainda nï¿½o criou
     /// </summary>
     /// <param name="request">Name e email</param>
     /// <returns></returns>
@@ -76,7 +76,7 @@ namespace CarrefourFluxoCaixa.Controllers
         {
           foreach (var erro in item.Errors)
           {
-            _logger.LogError($"Date: {DateTime.UtcNow}, Error: requisição inválida {erro.ErrorMessage}");
+            _logger.LogError($"Date: {DateTime.UtcNow}, Error: requisiï¿½ï¿½o invï¿½lida {erro.ErrorMessage}");
           }
         }
         return BadRequest(ModelState);
@@ -91,7 +91,7 @@ namespace CarrefourFluxoCaixa.Controllers
     }
     
     /// <summary>
-    /// Para retornar uma conta informe um email (Observação: utilize o identificador da conta retornado nos métodos seguintes: id)
+    /// Para retornar uma conta informe um email (Observaï¿½ï¿½o: utilize o identificador da conta retornado nos mï¿½todos seguintes: id)
     /// </summary>
     /// <param name="request">Email</param>
     /// <returns></returns>
@@ -119,7 +119,7 @@ namespace CarrefourFluxoCaixa.Controllers
         {
           foreach (var erro in item.Errors)
           {
-            _logger.LogError($"Date: {DateTime.UtcNow}, Error: requisição inválida {erro.ErrorMessage}");
+            _logger.LogError($"Date: {DateTime.UtcNow}, Error: requisiï¿½ï¿½o invï¿½lida {erro.ErrorMessage}");
           }
         }
         return BadRequest(ModelState);        
@@ -151,14 +151,14 @@ namespace CarrefourFluxoCaixa.Controllers
         Guid id;
         if (!Guid.TryParse(request.AccountId, out id))
         {
-          ModelState.AddModelError("Guid", "Identificador em formato inválido => guid");
+          ModelState.AddModelError("Guid", "Identificador em formato invï¿½lido => guid");
         }
         if (ModelState.IsValid)
         {          
           var result = await _applicationServiceBalance.GetByAccountId(Guid.Parse(request.AccountId));
           if (result == null)
           {
-            return NotFound("Não foi realizada nenhuma movimentação ainda!");
+            return NotFound("Nï¿½o foi realizada nenhuma movimentaï¿½ï¿½o ainda!");
           }
           return Ok(result);
         }
@@ -166,7 +166,7 @@ namespace CarrefourFluxoCaixa.Controllers
         {
           foreach (var erro in item.Errors)
           {
-            _logger.LogError($"Date: {DateTime.UtcNow}, Error: requisição inválida {erro.ErrorMessage}");
+            _logger.LogError($"Date: {DateTime.UtcNow}, Error: requisiï¿½ï¿½o invï¿½lida {erro.ErrorMessage}");
           }
         }
         return BadRequest(ModelState);
@@ -181,7 +181,7 @@ namespace CarrefourFluxoCaixa.Controllers
     }
    
     /// <summary>
-    /// Para retornar o extrato diário informe o idenficador da conta, o dia mês e ano no formato ddmmaaaa
+    /// Para retornar o extrato diï¿½rio informe o idenficador da conta, o dia mï¿½s e ano no formato ddmmaaaa
     /// </summary>
     /// <param name="request">Account number, email e dia</param>
     /// <returns></returns>
@@ -198,12 +198,12 @@ namespace CarrefourFluxoCaixa.Controllers
         Guid id;
         if (!Guid.TryParse(request.AccountId, out id))
         {
-          ModelState.AddModelError("Guid", "Identificador em formato inválido => guid");
+          ModelState.AddModelError("Guid", "Identificador em formato invï¿½lido => guid");
         }
         DateTime date;
         if (!DateTime.TryParse($"{int.Parse(request.DiaMesAno.Substring(4))}/{int.Parse(request.DiaMesAno.Substring(2, 2))}/{int.Parse(request.DiaMesAno.Substring(0, 2))}", out date))
         {
-          ModelState.AddModelError("diamesano", "Data inválida");
+          ModelState.AddModelError("diamesano", "Data invï¿½lida");
         }
 
         if (ModelState.IsValid)
@@ -211,7 +211,7 @@ namespace CarrefourFluxoCaixa.Controllers
           var result = await _consolidadoQueueApplicationService.GenerateConsolidado(request);   
           if (result == null)
           {
-            return NotFound("Fluxo de Conta ainda sem movimentação");
+            return NotFound("Fluxo de Conta ainda sem movimentaï¿½ï¿½o");
           }
           return Ok(result);
         }
@@ -219,7 +219,7 @@ namespace CarrefourFluxoCaixa.Controllers
         {
           foreach (var erro in item.Errors)
           {
-            _logger.LogError($"Date: {DateTime.UtcNow}, Error: requisição inválida {erro.ErrorMessage}");
+            _logger.LogError($"Date: {DateTime.UtcNow}, Error: requisiï¿½ï¿½o invï¿½lida {erro.ErrorMessage}");
           }
         }
         return BadRequest(ModelState);
@@ -231,12 +231,12 @@ namespace CarrefourFluxoCaixa.Controllers
         internalServerError.StatusCode = 500;
         return internalServerError;
       }
-    }
+    }    
     
     /// <summary>
-    /// Para realizar um lançamento informe o número da conta, email, descrição do lançamento, type C ou D (C=Crédito, D=Débito), valor
+    /// Para realizar um lanï¿½amento informe o nï¿½mero da conta, email, descriï¿½ï¿½o do lanï¿½amento, type C ou D (C=Crï¿½dito, D=Dï¿½bito), valor
     /// </summary>
-    /// <param name="request">AccountNumber = número conta, Email = email, Description = descrição lançamento, RecordType = tipo, Value = valor</param>
+    /// <param name="request">AccountNumber = nï¿½mero conta, Email = email, Description = descriï¿½ï¿½o lanï¿½amento, RecordType = tipo, Value = valor</param>
     /// <returns></returns>
     [HttpPost("CriaLancamento",Name = "CreateRecord")]
     public async Task<IActionResult> CreateRecord([FromBody]RecordRequest request)
@@ -247,7 +247,7 @@ namespace CarrefourFluxoCaixa.Controllers
         Guid id;
         if (!Guid.TryParse(request.AccountId, out id))
         {
-          ModelState.AddModelError("Guid", "Identificador em formato inválido => guid");
+          ModelState.AddModelError("Guid", "Identificador em formato invï¿½lido => guid");
         }
         if (ModelState.IsValid)
         {
@@ -270,7 +270,7 @@ namespace CarrefourFluxoCaixa.Controllers
         {
           foreach (var erro in item.Errors)
           {
-            _logger.LogError($"Date: {DateTime.UtcNow}, Error: requisição inválida {erro.ErrorMessage}");
+            _logger.LogError($"Date: {DateTime.UtcNow}, Error: requisiï¿½ï¿½o invï¿½lida {erro.ErrorMessage}");
           }
         }
         return BadRequest(ModelState);
