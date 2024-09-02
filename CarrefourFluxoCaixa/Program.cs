@@ -22,8 +22,10 @@ builder.Services.AddSwaggerGen(gen =>
   gen.SwaggerDoc("v1", new OpenApiInfo
   {
     Version = "v1",
-    Title = "Teste - Carrefour API",
+
+    Title = "Test - Carrefour API",
     Description = "Um Web API em ASP.NET Core Web API para gerenciamento de fluxo de caixa. � necess�rio voc� estar executando o RabbitMQ na porta padr�o para retornar extrato de conta!",    
+
     Contact = new OpenApiContact
     {
       Name = "Davi Lima Alves",
@@ -60,7 +62,7 @@ if (app.Environment.IsDevelopment())
   app.UseSwaggerUI();
 }
 
-app.UseCors(cors => cors.AllowAnyOrigin());
+app.UseCors(cors => { cors.AllowAnyOrigin(); cors.AllowAnyMethod(); cors.AllowAnyHeader(); });
 
 app.UseHttpsRedirection();
 
