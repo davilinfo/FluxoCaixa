@@ -1,4 +1,10 @@
+<<<<<<< Updated upstream
 ﻿using Domain.Record.Commands;
+=======
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Reflection.PortableExecutable;
+using Domain.Record.Commands;
+>>>>>>> Stashed changes
 using FluentValidation;
 
 namespace Domain.Record.Validations
@@ -16,6 +22,7 @@ namespace Domain.Record.Validations
     public void ValidateType()
     {
       RuleFor(t=> t.Type).NotEmpty().WithMessage("Type é obrigatório (C ou D)");
+      RuleFor(t=> t.Type).Must(v=> char.ToLower(v) == 'c' || char.ToLower(v) == 'd' ).WithMessage("Type deve ser crédito (C) ou débito (D)");
     }
     public void ValidateValue()
     {
