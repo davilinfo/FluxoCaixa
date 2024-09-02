@@ -51,8 +51,8 @@ alterar AMQP hostname para host.docker.internal
 Para publicar versão da aplicação faça na pasta da solução:
 Dotnet publish -c Debug
 
-Gerar imagem em docker:
-docker build -f "D:\RestfulApi\CarrefourFluxoCaixa\CarrefourFluxoCaixa\Dockerfile" --force-rm -t carrefour "D:\RestfulApi\CarrefourFluxoCaixa"
+Gerar imagem em docker (na pasta da solução faça):
+docker build -f ".\CarrefourFluxoCaixa\Dockerfile" --force-rm -t carrefour ".\"
 
 Criar container a partir de imagem:
 docker run -dt -e "ASPNETCORE_ENVIRONMENT=Development" -e "ASPNETCORE_LOGGING__CONSOLE__DISABLECOLORS=true"  -p49155:80 --name carrefour_development carrefour:latest --network host
