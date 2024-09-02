@@ -231,61 +231,7 @@ namespace CarrefourFluxoCaixa.Controllers
         internalServerError.StatusCode = 500;
         return internalServerError;
       }
-    }
-
-    /// <summary>
-    /// Para retornar o extrato di�rio informe o idenficador da conta, o dia m�s e ano no formato ddmmaaaa
-    /// </summary>
-    /// <param name="request">Account number, email e dia</param>
-    /// <returns></returns>
-    [HttpGet("GetExtratoC", Name = "GetExtractC")]
-    [AllowAnonymous]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> GetExtractC([FromQuery]GetExtractRequest request)
-    {
-      _logger.LogInformation($"Get extract request: {JsonSerializer.Serialize(request)}");
-      try
-      {
-        Guid id;
-        if (!Guid.TryParse(request.AccountId, out id))
-        {
-          ModelState.AddModelError("Guid", "Identificador em formato inv�lido => guid");
-        }
-        DateTime date;
-        if (!DateTime.TryParse($"{int.Parse(request.DiaMesAno.Substring(4))}/{int.Parse(request.DiaMesAno.Substring(2, 2))}/{int.Parse(request.DiaMesAno.Substring(0, 2))}", out date))
-        {
-          ModelState.AddModelError("diamesano", "Data inv�lida");
-        }
-
-        if (ModelState.IsValid)
-        {
-          var result = await _consolidadoQueueApplicationService.GenerateConsolidado(request);   
-          if (result == null)
-          {
-            return NotFound("Fluxo de Conta ainda sem movimenta��o");
-          }
-          return Ok(result);
-        }
-        foreach (var item in ModelState.Values)
-        {
-          foreach (var erro in item.Errors)
-          {
-            _logger.LogError($"Date: {DateTime.UtcNow}, Error: requisi��o inv�lida {erro.ErrorMessage}");
-          }
-        }
-        return BadRequest(ModelState);
-      }
-      catch (Exception e)
-      {
-        _logger.LogError($"{e.Message}", e);
-        var internalServerError = new JsonResult($"Aconteceu o seguinte erro: {e.Message}");
-        internalServerError.StatusCode = 500;
-        return internalServerError;
-      }
-    }
+    }    
     
     /// <summary>
     /// Para realizar um lan�amento informe o n�mero da conta, email, descri��o do lan�amento, type C ou D (C=Cr�dito, D=D�bito), valor
