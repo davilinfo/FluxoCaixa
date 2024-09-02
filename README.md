@@ -31,7 +31,12 @@ Microserviço: independente para time, permite escalar horizontalmente e vertica
 
 ##SQL Server 2016 database gerado a partir de migrations (executar seguintes comandos na pasta da solução)
 dotnet tool install --global dotnet-ef
+
 dotnet ef database update FluxoCaixa --project Persistence -s CarrefourFluxoCaixa -c FluxoCaixaContext --verbose
+
+dotnet ef database update 20230730182027_RecordTypeToChar --project Persistence -s CarrefourFluxoCaixa -c FluxoCaixaContext --verbose
+
+dotnet ef database update 20230730182658_Comments --project Persistence -s CarrefourFluxoCaixa -c FluxoCaixaContext --verbose
 
 ##IIS padrão de uso
 
