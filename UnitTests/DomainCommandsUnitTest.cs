@@ -1,5 +1,6 @@
 using AutoMapper.Configuration.Annotations;
 using Castle.Components.DictionaryAdapter.Xml;
+using Domain.Account.Commands;
 using Domain.EF;
 using Domain.Record.Commands;
 
@@ -131,6 +132,116 @@ namespace UnitTests{
             Assert.AreEqual(true, result);
             Assert.IsInstanceOfType(record, typeof(Domain.EF.Record));
         }
-    }
 #endregion Record
+
+#region Account
+        [TestMethod]
+        public void RegisterAccountCommand_Email1_ShouldFail_UnitTest(){                        
+            long accountNumber = 0;
+            var name = "Conta de crédito";
+            var email = "teste";
+
+            var registerAccountCommand = new RegisterAccountCommand(accountNumber, name, email);
+            var result = registerAccountCommand.IsValid();            
+
+            Assert.IsInstanceOfType(registerAccountCommand, typeof(RegisterAccountCommand));
+            Assert.AreEqual(false, result);
+            Assert.IsTrue(registerAccountCommand.ValidationResult.Errors.Count > 0);
+        }
+        [TestMethod]
+        public void RegisterAccountCommand_Email2_ShouldFail_UnitTest(){                        
+            long accountNumber = 0;
+            var name = "Conta de crédito";
+            var email = "teste@";
+
+            var registerAccountCommand = new RegisterAccountCommand(accountNumber, name, email);
+            var result = registerAccountCommand.IsValid();            
+
+            Assert.IsInstanceOfType(registerAccountCommand, typeof(RegisterAccountCommand));
+            Assert.AreEqual(false, result);
+            Assert.IsTrue(registerAccountCommand.ValidationResult.Errors.Count > 0);
+        }              
+        [TestMethod]
+        public void RegisterAccountCommand_Email3_ShouldSucceed_UnitTest(){                        
+            long accountNumber = 0;
+            var name = "Conta de crédito";
+            var email = "teste@gmail.com";
+
+            var registerAccountCommand = new RegisterAccountCommand(accountNumber, name, email);
+            var result = registerAccountCommand.IsValid();            
+
+            Assert.IsInstanceOfType(registerAccountCommand, typeof(RegisterAccountCommand));
+            Assert.AreEqual(true, result);            
+            Assert.IsTrue(registerAccountCommand.ValidationResult.Errors.Count == 0);
+        }
+        [TestMethod]
+        public void RegisterAccountCommand_NameEmpty_ShouldFail_UnitTest(){                        
+            long accountNumber = 0;
+            var name = "";
+            var email = "teste@gmail.com";
+
+            var registerAccountCommand = new RegisterAccountCommand(accountNumber, name, email);
+            var result = registerAccountCommand.IsValid();            
+
+            Assert.IsInstanceOfType(registerAccountCommand, typeof(RegisterAccountCommand));
+            Assert.AreEqual(false, result);   
+            Assert.IsTrue(registerAccountCommand.ValidationResult.Errors.Count > 0);         
+        }
+        [TestMethod]
+        public void RegisterAccountCommand_IsThat_ShouldSucceed_UnitTest(){                        
+            long accountNumber = 0;
+            var name = "Conta de crédito";
+            var email = "teste@gmail.com";
+
+            var registerAccountCommand = new RegisterAccountCommand(accountNumber, name, email);
+            var result = registerAccountCommand.IsValid(); 
+            var account = registerAccountCommand.CreateAccount();           
+
+            Assert.IsInstanceOfType(registerAccountCommand, typeof(RegisterAccountCommand));
+            Assert.AreEqual(true, result);   
+            Assert.IsTrue(registerAccountCommand.ValidationResult.Errors.Count == 0);
+            Assert.IsInstanceOfType(account, typeof(Domain.EF.Account));
+        }
+        [TestMethod]
+        public void RegisterAccountCommand_IsThat2_ShouldSucceed_UnitTest(){                        
+            long accountNumber = 0;
+            var name = "Conta de débito";
+            var email = "teste@gmail.com.br";
+
+            var registerAccountCommand = new RegisterAccountCommand(accountNumber, name, email);
+            var result = registerAccountCommand.IsValid(); 
+            var account = registerAccountCommand.CreateAccount();           
+
+            Assert.IsInstanceOfType(registerAccountCommand, typeof(RegisterAccountCommand));
+            Assert.AreEqual(true, result);   
+            Assert.IsTrue(registerAccountCommand.ValidationResult.Errors.Count == 0);
+            Assert.IsInstanceOfType(account, typeof(Domain.EF.Account));
+        }
+        [TestMethod]
+        public void UpdateAccountCommand_IsThat_ShouldSucceed_UnitTest(){   
+                                
+            long accountNumber = 452187;
+            var name = "Conta de crédito e débito";
+            var email = "teste@gmail.com.br";
+
+            var registerAccountCommand = new RegisterAccountCommand(accountNumber, name, email);
+            var result = registerAccountCommand.IsValid(); 
+            var account = registerAccountCommand.CreateAccount();
+
+            var updateAccountCommand = new UpdateAccountCommand(account.Id, accountNumber, name, email);
+            var resultUpdate = updateAccountCommand.IsValid(); 
+            var updated = updateAccountCommand.UpdateCommand(account);           
+
+            Assert.IsInstanceOfType(registerAccountCommand, typeof(RegisterAccountCommand));
+            Assert.AreEqual(true, result);             
+            Assert.IsTrue(registerAccountCommand.ValidationResult.Errors.Count == 0);
+            Assert.IsInstanceOfType(account, typeof(Domain.EF.Account));
+
+            Assert.IsInstanceOfType(updateAccountCommand, typeof(UpdateAccountCommand));
+            Assert.AreEqual(true, resultUpdate);
+            Assert.IsTrue(updateAccountCommand.ValidationResult.Errors.Count == 0);
+            Assert.IsInstanceOfType(updated, typeof(Domain.EF.Account));
+        }
+#endregion
+    }
 }
