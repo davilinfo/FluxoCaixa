@@ -22,8 +22,10 @@ builder.Services.AddSwaggerGen(gen =>
   gen.SwaggerDoc("v1", new OpenApiInfo
   {
     Version = "v1",
+
     Title = "Test - Carrefour API",
-    Description = "Um Web API em ASP.NET Core Web API para gerenciamento de fluxo de caixa. É necessário você estar executando o RabbitMQ na porta padrão para retornar extrato de conta!",    
+    Description = "Um Web API em ASP.NET Core Web API para gerenciamento de fluxo de caixa. ï¿½ necessï¿½rio vocï¿½ estar executando o RabbitMQ na porta padrï¿½o para retornar extrato de conta!",    
+
     Contact = new OpenApiContact
     {
       Name = "Davi Lima Alves",

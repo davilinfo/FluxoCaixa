@@ -1,7 +1,9 @@
-﻿using Domain.Record.Validations;
+﻿using System.Diagnostics.CodeAnalysis;
+using Domain.Record.Validations;
 
 namespace Domain.Record.Commands
 {
+  [ExcludeFromCodeCoverage]
   public class RegisterRecordCommand : RecordCommand
   {
     public RegisterRecordCommand(string history, char type, double value, Domain.EF.Account idAccountNavigation) 

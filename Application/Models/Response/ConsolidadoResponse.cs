@@ -1,7 +1,9 @@
-﻿using Application.Models.ViewModel;
+﻿using System.Diagnostics.CodeAnalysis;
+using Application.Models.ViewModel;
 
 namespace Application.Models.Response
 {
+  [ExcludeFromCodeCoverage]
   public class ConsolidadoResponse
   {
     public Guid Id { get; set; }

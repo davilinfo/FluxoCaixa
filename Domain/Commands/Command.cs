@@ -1,7 +1,9 @@
-﻿using FluentValidation.Results;
+﻿using System.Diagnostics.CodeAnalysis;
+using FluentValidation.Results;
 
 namespace Domain.Commands
 {
+  [ExcludeFromCodeCoverage]
   public abstract class Command
   {
     public DateTime Created { get; private set; }
