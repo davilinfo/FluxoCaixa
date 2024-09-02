@@ -23,7 +23,9 @@ Microserviço: independente para time, permite escalar horizontalmente e vertica
 
 ##EntityFramework: EF Core 7, CodeFirst
 
-##AMQP Rabbit MQ: Mensageria pode ser ativada ou desativada em arquivo de appsettings, mas se ativada deve ser instalada versão (3.12.2), em projeto RabbitMQ.Client 6.5.0
+##AMQP Rabbit MQ: Mensageria pode ser ativada ou desativada em arquivo de appsettings, mas se ativada deve ser instalada versão (3.12.2 ou 3.13.7), em projeto RabbitMQ.Client 6.5.0
+
+Download Erlang OTP 27.0.1
 
 ##Unit Tests: Utilizado Moq e VisualStudioUnitTests. Realizado unit testes com padrão AAA (arrange act assert) de um serviço ApplicationServiceBalanceUnitTest. Cobre métodos, exceções 
 

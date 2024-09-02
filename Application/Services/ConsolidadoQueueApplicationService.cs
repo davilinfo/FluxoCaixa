@@ -38,7 +38,7 @@ namespace Application.Services
       }
 
       return null;
-    } 
+    }     
     
     private async Task<ConsolidadoResponse> Generate(GetExtractRequest request)
     {
