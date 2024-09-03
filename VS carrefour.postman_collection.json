@@ -103,12 +103,10 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:5267/FluxoCaixa/CriaContaFluxo",
-					"protocol": "http",
+					"raw": "{{host}}/FluxoCaixa/CriaContaFluxo",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "5267",
 					"path": [
 						"FluxoCaixa",
 						"CriaContaFluxo"
