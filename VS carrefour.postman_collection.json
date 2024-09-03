@@ -7,109 +7,6 @@
 	},
 	"item": [
 		{
-			"name": "Request token and Request Method",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"type": "text/javascript",
-						"exec": []
-					}
-				}
-			],
-			"protocolProfileBehavior": {
-				"followRedirects": true,
-				"disableUrlEncoding": false,
-				"disableCookies": false
-			},
-			"request": {
-				"auth": {
-					"type": "oauth2",
-					"oauth2": [
-						{
-							"key": "grant_type",
-							"value": "authorization_code",
-							"type": "string"
-						},
-						{
-							"key": "authUrl",
-							"value": "https://login.microsoftonline.com/69cebbf0-dd32-4f50-ad55-c060998c2a9d/oauth2/v2.0/authorize",
-							"type": "string"
-						},
-						{
-							"key": "accessTokenUrl",
-							"value": "https://login.microsoftonline.com/69cebbf0-dd32-4f50-ad55-c060998c2a9d/oauth2/v2.0/token",
-							"type": "string"
-						},
-						{
-							"key": "clientSecret",
-							"value": "yll8Q~~RjHJarAqlbMNXsg.PSy5WKg6rmMmS9b6F",
-							"type": "string"
-						},
-						{
-							"key": "clientId",
-							"value": "cf4fde92-6574-465c-8a8d-61dc949fd11a",
-							"type": "string"
-						},
-						{
-							"key": "redirect_uri",
-							"value": "http://localhost",
-							"type": "string"
-						},
-						{
-							"key": "scope",
-							"value": "api://832885aa-482e-450e-9c40-009612bb3d49/access.read",
-							"type": "string"
-						},
-						{
-							"key": "username",
-							"value": "",
-							"type": "string"
-						},
-						{
-							"key": "password",
-							"value": "",
-							"type": "string"
-						},
-						{
-							"key": "client_authentication",
-							"value": "header",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n  \"name\": \"teste_oauth2\",\n  \"email\": \"davinet@live.com\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:5267/FluxoCaixa/CriaContaFluxo",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "5267",
-					"path": [
-						"FluxoCaixa",
-						"CriaContaFluxo"
-					]
-				}
-			},
-			"response": []
-		},
-		{
 			"name": "Request token and Request Method 2",
 			"event": [
 				{
@@ -329,8 +226,11 @@
 				{
 					"listen": "test",
 					"script": {
+						"exec": [
+							""
+						],
 						"type": "text/javascript",
-						"exec": []
+						"packages": {}
 					}
 				}
 			],
@@ -341,11 +241,61 @@
 			},
 			"request": {
 				"auth": {
-					"type": "bearer",
-					"bearer": [
+					"type": "oauth2",
+					"oauth2": [
 						{
-							"key": "token",
-							"value": "eyJ1aWQiOiIwMDAwMDAwMC0wMDAwLTAwMDAtNTgxZi05N2RiNWRjYzg2NTgiLCJ1dGlkIjoiOTE4ODA0MGQtNmM2Ny00YzViLWIxMTItMzZhMzA0YjY2ZGFkIn0",
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "grant_type",
+							"value": "implicit",
+							"type": "string"
+						},
+						{
+							"key": "authUrl",
+							"value": "https://login.microsoftonline.com/69cebbf0-dd32-4f50-ad55-c060998c2a9d/oauth2/v2.0/authorize",
+							"type": "string"
+						},
+						{
+							"key": "accessTokenUrl",
+							"value": "https://login.microsoftonline.com/69cebbf0-dd32-4f50-ad55-c060998c2a9d/oauth2/v2.0/token",
+							"type": "string"
+						},
+						{
+							"key": "clientSecret",
+							"value": "uhu8Q~uDLXsu1Dl8duhr-WmA82olvMvFIfN18bEh",
+							"type": "string"
+						},
+						{
+							"key": "clientId",
+							"value": "cf4fde92-6574-465c-8a8d-61dc949fd11a",
+							"type": "string"
+						},
+						{
+							"key": "redirect_uri",
+							"value": "http://localhost",
+							"type": "string"
+						},
+						{
+							"key": "scope",
+							"value": "api://832885aa-482e-450e-9c40-009612bb3d49/access.read",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "",
+							"type": "string"
+						},
+						{
+							"key": "client_authentication",
+							"value": "header",
 							"type": "string"
 						}
 					]
@@ -353,12 +303,10 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "https://localhost:7022/FluxoCaixa/GetConta?Email=davinet@live.com",
-					"protocol": "https",
+					"raw": "{{host}}/FluxoCaixa/GetConta?Email=davinet@live.com",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "7022",
 					"path": [
 						"FluxoCaixa",
 						"GetConta"
