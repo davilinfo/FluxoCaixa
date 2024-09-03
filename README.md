@@ -2,6 +2,8 @@
 Projeto desenvolvido com .NET 7.0
 Instruções de como utilizar web api estão disponíveis em Swagger. Se executar a partir de Visual Studio faça em modo administrador para carregar comentários em Swagger.
 
+Segurança em Azure: Tenant 69cebbf0-dd32-4f50-ad55-c060998c2a9d ClientId:832885aa-482e-450e-9c40-009612bb3d49
+
 **Desing Patterns
 SOLID Principles: baseado em interfaces para serviços e entidades
 
