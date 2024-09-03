@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "21959829-983e-4662-a54c-38860825072b",
+		"_postman_id": "e430ad82-0258-4e8e-b381-a865f1834948",
 		"name": "VS carrefour",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "38068534"
@@ -121,8 +121,11 @@
 				{
 					"listen": "test",
 					"script": {
+						"exec": [
+							""
+						],
 						"type": "text/javascript",
-						"exec": []
+						"packages": {}
 					}
 				}
 			],
@@ -196,7 +199,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"name\": \"teste_oauth2\",\n  \"email\": \"davinet@live.com\"\n}",
+					"raw": "{\n  \"accountId\": \"d6d36969-69dc-4329-84b4-33e880bab3b5\",\n  \"description\": \"Lançamento de crédito\",\n  \"type\": \"C\",\n  \"value\": 35\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -204,15 +207,14 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:5267/FluxoCaixa/CriaContaFluxo",
+					"raw": "http://{{host}}/FluxoCaixa/CriaLancamento",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "5267",
 					"path": [
 						"FluxoCaixa",
-						"CriaContaFluxo"
+						"CriaLancamento"
 					]
 				}
 			},
