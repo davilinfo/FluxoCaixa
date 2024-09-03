@@ -29,6 +29,8 @@ Download Erlang OTP 27.0.1
 
 ##Unit Tests: Utilizado Moq e VisualStudioUnitTests. Realizado unit testes com padrão AAA (arrange act assert) de um serviço ApplicationServiceBalanceUnitTest. Cobre métodos, exceções 
 
+##Integration Tests: AutoMapper, IConfiguration, Repositories, Serviços
+
 ##Monitoramento Application insights
 
 ##SQL Server 2016 database gerado a partir de migrations (executar seguintes comandos na pasta da solução)
