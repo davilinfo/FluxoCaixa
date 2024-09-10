@@ -3,13 +3,14 @@ Projeto desenvolvido com .NET 7.0
 Instruções de como utilizar web api estão disponíveis em Swagger. Se executar a partir de Visual Studio faça em modo administrador para carregar comentários em Swagger.
 
 Segurança em Azure: Tenant 69cebbf0-dd32-4f50-ad55-c060998c2a9d ClientId:832885aa-482e-450e-9c40-009612bb3d49
+Bearer Token
 
 **Desing Patterns
 SOLID Principles: baseado em interfaces para serviços e entidades
 
 Microserviço: independente para time, permite escalar horizontalmente e verticalmente
 
-### CQRS (Não inteiramente já que não existe uma outra base de dados para read na solução, então não tem implementação de Query Results. Existe commands e validation commands apenas para Account (já que é um teste), business layer está em application service com validação lá também, repository pattern, view model e models): Consultas e persistência em database realizada em repositórios (Persistência), contratos repositórios, commands (Account), validations commands(Account) e entities em Domínio, Serviços invocam commands e repositories através de contratos, controller invocam serviços
+### CQRS (Não inteiramente já que não existe uma outra base de dados para read na solução, então não tem implementação de Query Results. Existe commands e validation commands apenas para Account e Record (já que é um teste), business layer está em application service com validação lá também, repository pattern, view model e models): Consultas e persistência em database realizada em repositórios (Persistência), contratos repositórios, commands (Account, Record), validations commands(Account, Record) e entities em Domínio, Serviços invocam commands e repositories através de contratos, controller invoca serviços
 
 ## Saga: FluxoCaixaConsolidado service RabbitMQ
 
